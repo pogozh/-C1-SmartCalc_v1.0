@@ -1,0 +1,17 @@
+#ifndef SRC_ERRORS_H_
+#define SRC_ERRORS_H_
+
+typedef enum statuses {
+    OK,
+    NULL_POINTER,
+    INVALID_EXPRESSION,
+    INVALID_EXPRESSION_STRUCTURE,
+    INVALID_EXPRESSION_NO_X,
+    X_EXPRESSION_WITHOT_X,
+    CALCULATE_ERROR,
+    HAVE_NO_OPERATOR,
+    ALLOC_ERROR,
+    REALLOC_ERROR
+} status_t;
+
+#endif /* SRC_ERRORS_H_ */
