@@ -8,7 +8,7 @@
 stack_t create_stack() {
     stack_t stack = {
         .data = NULL,
-        .top = 0,
+        .top = -1,
         .size = 0,
     };
     return stack;
@@ -42,8 +42,9 @@ status_t stack_push(stack_t *stack, ssize_t item) {
     } else {
         status = OK;
     }
-    stack->data[stack->top] = item;
     stack->top += 1;
+    stack->data[stack->top] = item;
+
     return status;
 }
 
@@ -63,13 +64,13 @@ ssize_t stack_pop(stack_t *stack) {
     return stack->data[stack->top];
 }
 
-ssize_t stack_peek(stack_t *stack) { return stack->data[(stack->top) - 1]; }
+ssize_t stack_peek(stack_t *stack) { return stack->data[(stack->top)]; }
 
 void stack_print(stack_t *stack) {
     // printf("stack printing ...\n");
     // printf("stack->top = %ld \n", stack->top); //debag
     char *delimetr = "";
-    for (int i = 0; i < stack->top; i++) {
+    for (int i = 0; i <= stack->top; i++) {
         printf("%s%ld", delimetr, stack->data[i]);
         delimetr = ", ";
     }
@@ -83,10 +84,10 @@ int main() {
         stack_push(&s, i);
         stack_print(&s);
     }
-    printf("!peek top = %i\n", stack_peek(&s));
+    printf("!peek top = %li\n", stack_peek(&s));
     for (int i = 0; i < 5; i++) {
-        stack_pop(&s);
         stack_print(&s);
+        stack_pop(&s);
     }
     stack_delete(&s);
     return 0;
