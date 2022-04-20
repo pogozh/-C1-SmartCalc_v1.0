@@ -3,7 +3,8 @@ e_flags = -Wall -Wextra #-Werror
 c_flags = -g
 target = a.o
 clean_files = *.o* *.a
-srcs = stack.c
+srcs = stack.c\
+       calc.c\
 
 all: clean check programm cppcheck run_programm clean
 

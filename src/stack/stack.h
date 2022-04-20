@@ -22,9 +22,9 @@ bool stack_is_empty(stack_t *stack);
 bool stack_is_full(stack_t *stack);
 status_t extend_stack(stack_t *stack);
 
-status_t stack_push(stack_t *stack, ssize_t value);
+status_t push(stack_t *stack, ssize_t value);
 
-ssize_t stack_pop(stack_t *stack);
+ssize_t pop(stack_t *stack);
 
 ssize_t stack_peek(stack_t *stack);
 
