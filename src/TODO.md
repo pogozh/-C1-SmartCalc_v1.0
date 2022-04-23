@@ -1,0 +1,1 @@
+1) remake lexeme struct : extend, inicial, destroy;

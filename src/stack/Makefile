@@ -5,6 +5,9 @@ target = a.o
 clean_files = *.o* *.a
 srcs = stack.c\
        calc.c\
+	   pars.c\
+
+#lexeme.c
 
 all: clean check programm cppcheck run_programm clean
 
@@ -25,7 +28,6 @@ cppcheck:
 
 # RUN LINTER
 CPPLINT.cfg:
-	
 	cp ../../materials/linters/CPPLINT.cfg .
 
 check: CPPLINT.cfg
@@ -39,18 +41,8 @@ check: CPPLINT.cfg
 # PHONY TARGET
 PHONY: clean check test
  
-test1: clean
+test: clean
 	$(CC) $(e_flags) test1.c -o test1.o -g -fsanitize=address
-	./test1.o
-	cppcheck test1.c
-
-test2: clean
-	$(CC) $(e_flags) test2.c -o test1.o -g -fsanitize=address
-	./test1.o
-	cppcheck test1.c
-
-test3: clean
-	$(CC) $(e_flags) test3.c -o test1.o -g -fsanitize=address
 	./test1.o
 	cppcheck test1.c
 

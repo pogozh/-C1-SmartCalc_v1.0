@@ -27,17 +27,17 @@ bool stack_is_empty(stack_t *stack) {
     } else {
         state = false;
     }
-    printf("stack empty %i\n", state ? true : false);
+    // printf("stack empty %i\n", state ? true : false); //db
     return state;
 }
 
-status_t push(stack_t *stack, ssize_t item) {
+status_t push(stack_t *stack, double item) {
     status_t status = 0;
     // printf("stack pushing ...\n"); debag
     if (stack_is_full(stack)) {
         stack->size = (stack->size + 1) * 2;
         stack->data =
-            (ssize_t *)realloc(stack->data, sizeof(ssize_t) * stack->size);
+            (double *)realloc(stack->data, sizeof(double) * stack->size);
         // printf("stack_ext");  // debag
     } else {
         status = OK;
@@ -59,19 +59,23 @@ bool stack_is_full(stack_t *stack) {
     return state;
 }
 
-ssize_t pop(stack_t *stack) {
+double pop(stack_t *stack) {
     if (stack->top > 0) stack->top--;
+    // else
+    // stack->top = 1;
+    if ((stack->data) == NULL)
+        printf("\n !!! Error: no stack->data = %f\n", stack->data[stack->top]);
     return stack->data[stack->top];
 }
 
-ssize_t stack_peek(stack_t *stack) { return stack->data[(stack->top)]; }
+double stack_peek(stack_t *stack) { return stack->data[stack->top]; }
 
 void stack_print(stack_t *stack) {
     // printf("stack printing ...\n");
     // printf("stack->top = %ld \n", stack->top); //debag
     char *delimetr = "";
     for (int i = 0; i <= stack->top; i++) {
-        printf("%s%ld", delimetr, stack->data[i]);
+        printf("%s%0.0f", delimetr, stack->data[i]);
         delimetr = ", ";
     }
     printf("\n");

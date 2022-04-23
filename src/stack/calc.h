@@ -8,4 +8,6 @@
 
 #include "stack.h"
 
+int calc();
+
 #endif /* SRC_STACK_CALC_H */
