@@ -72,7 +72,7 @@ void stack_print(stack_t *stack) {
     // printf("stack->top = %ld \n", stack->top); //debag
     char *delimetr = "";
     for (int i = 0; i <= stack->top; i++) {
-        printf("%s%0.0f", delimetr, stack->data[i]);
+        printf("%s%5.3f", delimetr, stack->data[i]);
         delimetr = ", ";
     }
     printf("\n");

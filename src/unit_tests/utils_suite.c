@@ -75,6 +75,20 @@ START_TEST(second_test) {
 }
 END_TEST
 
+START_TEST(unary_test) {
+    char str[] = "-1-(-2)--2-+2";  //- 2 + 3 - (-4) + (-2) +sin(0) ";
+    int len = strlen(str);
+    int sum = 0;
+    for (int i = 0; i < len; i++) {
+        sum += unary_oper(str, i);
+    }
+    int valid = valid_tail(str, len);
+    // printf("\n !!unary sum!! = %d| valid = %d\n", sum, valid);
+    if (!valid) sum = 0;
+    ck_assert_int_eq(sum, -2);
+}
+END_TEST
+
 // START_TEST(new_test) {}
 // END_TEST
 
@@ -84,6 +98,7 @@ Suite *utils_suite(void) {
 
     tcase_add_test(cases, first_test);
     tcase_add_test(cases, second_test);
+    tcase_add_test(cases, unary_test);
 
     tcase_set_timeout(cases, 999999);
     suite_add_tcase(suite, cases);

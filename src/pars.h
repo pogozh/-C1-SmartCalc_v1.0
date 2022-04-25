@@ -35,9 +35,12 @@ double calculation(char *exprassion);
 
 // utils
 int oper_priority(stack_t oper);
-int check_repeated_opers(char element);
+int check_repeated_opers(char *str);
 int check_functions(stack_t *opers, char *string, int i);
-int unary_minus(char *str, int i);
+int unary_oper(char *str, int i);
+int is_digit(char chr);
+int is_number(char *str, int i);
+int valid_tail(char *str, int len);
 
 #include "stack.h"
 #endif  // SRC_PARS_H_
