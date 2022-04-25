@@ -11,23 +11,23 @@
 #define s21_NEG_INFINITY -1.0 / 0.0
 #define s21_NAN 0.0 / 0.0
 
-#define SIN 701
-#define COS 702
-#define ASIN 711
-#define ACOS 712
-#define TAN 780
-#define ATAN 781
-#define SQRT 760
-#define LOG 750
-#define LN 751
-#define POW 600
-#define MOD 400
-#define MUL 300
-#define DEF 301
-#define PLUS 200
-#define MINUS 201
-#define CLOSE_BRACKET 100
-#define OPEN_BRaCKET 000
+#define SIN 801
+#define COS 802
+#define ASIN 811
+#define ACOS 812
+#define TAN 820
+#define ATAN 821
+#define SQRT 830
+#define LOG 840
+#define LN 850
+#define POW 700
+#define MOD 600
+#define MUL 500
+#define DEF 501
+#define PLUS 400
+#define MINUS 401
+#define CLOSE_BRACKET 300
+#define OPEN_BRACKET 200
 
 int oper_priority(stack_t oper);
 

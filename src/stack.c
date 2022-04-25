@@ -16,7 +16,7 @@ stack_t create_stack() {
 
 void stack_delete(stack_t *stack) {
     if (stack->data != NULL) free(stack->data);
-    stack = NULL;
+    // stack = NULL;
     // printf("stack deleted\n");
 }
 
@@ -61,10 +61,7 @@ bool stack_is_full(stack_t *stack) {
 
 double pop(stack_t *stack) {
     if (stack->top > 0) stack->top--;
-    // else
-    // stack->top = 1;
-    if ((stack->data) == NULL)
-        printf("\n !!! Error: no stack->data = %f\n", stack->data[stack->top]);
+    if ((stack->data) == NULL) printf("\n !!! Error: no stack->data\n");
     return stack->data[stack->top];
 }
 
