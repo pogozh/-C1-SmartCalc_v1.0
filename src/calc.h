@@ -1,5 +1,5 @@
-#ifndef SRC_STACK_CALC_H
-#define SRC_STACK_CALC_H
+#ifndef SRC_CALC_H_
+#define SRC_CALC_H_
 
 #include <math.h>
 #include <stdbool.h>
@@ -10,4 +10,4 @@
 
 int calc();
 
-#endif /* SRC_STACK_CALC_H */
+#endif /* SRC_CALC_H_ */

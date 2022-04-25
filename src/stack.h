@@ -1,5 +1,5 @@
-#ifndef SRC_STACK_STACK_H_
-#define SRC_STACK_STACK_H_
+#ifndef SRC_STACK_H_
+#define SRC_STACK_H_
 
 #include <stdbool.h>
 #include <stdio.h>
@@ -30,4 +30,4 @@ double stack_peek(stack_t *stack);
 
 void stack_print(stack_t *stack);
 
-#endif /* SRC_STACK_STACK_H_ */
+#endif /* SRC_STACK_H_ */

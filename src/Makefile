@@ -17,7 +17,7 @@ calc_OBJ_DIR = $(BUILD_DIR)/${target}
 TEST_OBJ_DIR = $(BUILD_DIR)/test
 
 
-# CREATE calc FILES
+# CREATE CALC FILES
 calc_SOURCE =\
     stack.c\
     calc.c\
@@ -47,17 +47,15 @@ TEST_DEP_PATH = $(TEST_OBJ_PATH:%.o=%.d)
 
 
 # ALL TARGET
-all: s21_calc.a test
+all: s21_calc.a tests
 
-
-# S21_calc.A BUILD
+# S21_CALC.A BUILD
 $(calc_OBJ_DIR)/%.o: $(calc_DIR)/%.c
 	$(CC) $(INCLUDE_PATH) $(MATH_LIB) $(DEBUG_FLAG) $(EXTRA_WARNING) -MD -c $< -o $@
 
 s21_calc.a: $(calc_OBJ_PATH)
 	ar rcs $@ $^
 	ranlib $@
-
 
 # S21_TEST.OUT BUILD
 $(TEST_OBJ_DIR)/%.o: $(TEST_DIR)/%.c
@@ -69,12 +67,13 @@ $(TEST_OBJ_DIR)/%.o: %.c
 test.out: $(TEST_OBJ_PATH)
 	$(CC) $^ $(COVERAGE_FLAG) $(INCLUDE_PATH) $(MATH_LIB) $(CHECK_LIB) $(EXTRA_WARNING) $(DEBUG_FLAG) -o $@
 
+# TESTS COVERAGE
 gcov_report: test.out
 	./$<
 	lcov -t "$<" -o gcovreport.info -c -d $(TEST_OBJ_DIR)
 	genhtml -o $@ gcovreport.info
 
-test: test.out
+tests: test.out
 #clear
 	./test.out
 
@@ -92,6 +91,9 @@ clean:
 	rm -rf gcovreport
 	rm -rf CPPLINT.cfg
 
+#RUN CPP CHECK
+cppcheck:
+	cppcheck ${calc_SOURCE}
 
 # RUN LINTER
 CPPLINT.cfg:
@@ -110,12 +112,10 @@ PHONY: clean check test
 
 
 # PERSONAL TARGETS SHOULD BE WRITTEN BELLOW, FOUND TARGETS ABOVE WILL BE DELETED
-
-# jdreama targets
-test1:
-	$(CC) $(e_flags) ${srcs} -o $(target) -g -fsanitize=address 
-	
 clear:
 	clear
-	
-jd: clean all
+
+# jdreama targets
+2all: clear clean check cppcheck gcov_report
+
+jd: clean clear all

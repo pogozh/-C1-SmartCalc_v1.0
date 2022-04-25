@@ -1,5 +1,5 @@
-#ifndef SRC_UNIT_TESTS_MATRIX_SUITE_H_
-#define SRC_UNIT_TESTS_MATRIX_SUITE_H_
+#ifndef SRC_UNIT_TESTS_CALC_SUITE_H_
+#define SRC_UNIT_TESTS_CALC_SUITE_H_
 
 #include <check.h>
 #include <math.h>
@@ -8,4 +8,4 @@
 
 Suite *calc_suite(void);
 
-#endif  // SRC_UNIT_TESTS_MATRIX_SUITE_H_
+#endif  // SRC_UNIT_TESTS_CALC_SUITE_H_
