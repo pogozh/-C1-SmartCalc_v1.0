@@ -19,8 +19,9 @@ double calculation(char *input) {
 
             if (is_digit(input[i]) == false)
                 i = pars_n_add_ops(&opers, input, i);
-            stack_print(&opers);
-            printf("opers peek %2.2f\n", stack_peek(&opers));
+            // stack_print(&opers);
+            printf("opers peek %c\n",
+                   (stack_peek(&opers) == 400.0) ? '+' : 'N');
             // printf("opers.top =%f\n  ", opers.data[opers.top - 1]);
 
             if ((is_digit(input[i]) == true) &&
@@ -28,7 +29,7 @@ double calculation(char *input) {
                 flag = true;
             // printf("count unary= %d, flag = %d...\n", unary, flag);
 
-            // find numbers
+            // START of adding float to stack opers
             if (is_digit(input[i])) {
                 double number = 0.0;
                 while (is_digit(input[i])) {
@@ -51,6 +52,8 @@ double calculation(char *input) {
                 if (unary == true) number *= -1.0;
                 printf("%f\n", number);  // debag numers input
                 push(&nums, number);
+                // END of adding float to stack opers
+
             } else if (flag == false) {
                 int prior = oper_priority(input[i]);
                 printf("i = %i, prior =  %d\n", i,
