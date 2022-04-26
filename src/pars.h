@@ -27,20 +27,23 @@
 #define DEF 501
 #define PLUS 400
 #define MINUS 401
-#define CLOSE_BRACKET 300
-#define OPEN_BRACKET 200
+#define OPEN_BRACKET 300
+#define CLOSE_BRACKET 200
 
 // main function
 double calculation(char *exprassion);
 
 // utils
-int oper_priority(stack_t oper);
+int gocalc(stack_t *opers, stack_t *nums);
+int oper_priority(char oper);
+int funx_priority(int oper);
 int check_repeated_opers(char *str);
-int check_functions(stack_t *opers, char *string, int i);
+int pars_n_add_ops(stack_t *opers, char *string, int i);
 int unary_oper(char *str, int i);
 int is_digit(char chr);
 int is_number(char *str, int i);
 int valid_tail(char *str, int len);
+double stack_down_to_result(stack_t *opers, stack_t *nums);
 
 #include "stack.h"
 #endif  // SRC_PARS_H_

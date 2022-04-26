@@ -36,7 +36,7 @@ START_TEST(second_test) {
     }
     printf("peek top = %5.2f\n", stack_peek(&oper));
     for (int i = 0; i < 10; i++) {
-        printf("%d ", oper_priority(oper));
+        printf("%d ", funx_priority(oper.data[oper.top]));
         pop(&oper);
     }
     stack_delete(&oper);
@@ -66,7 +66,7 @@ START_TEST(second_test) {
 
     printf("peek top = %5.2f\n", stack_peek(&oper));
     while (oper.top != 0) {
-        printf("%d ", oper_priority(oper));
+        printf("%d ", funx_priority(oper.data[oper.top]));
         pop(&oper);
     }
 

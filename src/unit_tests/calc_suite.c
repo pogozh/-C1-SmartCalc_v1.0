@@ -16,7 +16,7 @@ END_TEST
 START_TEST(First_test) {
     int i = 0;
     ++i;
-    ck_assert_uint_eq(calculation("12+sin(0)"), 2);
+    ck_assert_uint_eq(calculation("1+1"), 2);
 }
 END_TEST
 
