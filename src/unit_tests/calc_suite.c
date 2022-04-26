@@ -16,7 +16,7 @@ END_TEST
 START_TEST(First_test) {
     int i = 0;
     ++i;
-    ck_assert_uint_eq(calculation("1+1"), 2);
+    ck_assert_uint_eq(calculation("1.34+2.56"), 3);
 }
 END_TEST
 
@@ -38,7 +38,7 @@ Suite *calc_suite(void) {
     // jdreama
     tcase_add_test(cases, temp);
     tcase_add_test(cases, First_test);
-    tcase_add_test(cases, c02_test);
+    // tcase_add_test(cases, c02_test);
 
     // tcase_set_timeout(cases, 9999999);
 

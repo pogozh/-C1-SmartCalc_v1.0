@@ -15,8 +15,15 @@ double calculation(char *input) {
         for (int i = 0; i < inpLen; i++) {
             int unary = 0;
             int flag = false;
-            i = pars_n_add_ops(&opers, input, i);
-            if ((is_digit(input[i]) == false) &&
+            printf("1: i = %d, input[i] = %c \n", i, input[i]);
+
+            if (is_digit(input[i]) == false)
+                i = pars_n_add_ops(&opers, input, i);
+            stack_print(&opers);
+            printf("opers peek %2.2f\n", stack_peek(&opers));
+            // printf("opers.top =%f\n  ", opers.data[opers.top - 1]);
+
+            if ((is_digit(input[i]) == true) &&
                 (unary = unary_oper(input, i) < 0))
                 flag = true;
             // printf("count unary= %d, flag = %d...\n", unary, flag);
@@ -42,10 +49,12 @@ double calculation(char *input) {
                     number += tail;
                 }
                 if (unary == true) number *= -1.0;
-                printf("%f\n", number);
+                printf("%f\n", number);  // debag numers input
                 push(&nums, number);
             } else if (flag == false) {
                 int prior = oper_priority(input[i]);
+                printf("i = %i, prior =  %d\n", i,
+                       oper_priority(input[i]));  // debag numers input
                 if (prior > 1 && prior < 9) {
                     /* if close bracket*/
                     if (prior == 2) {
@@ -65,6 +74,7 @@ double calculation(char *input) {
                     }
                 }
             }
+            printf("2:i = %d, input[i] = %c \n", i, input[i]);
         }
     }
 
@@ -103,7 +113,7 @@ double stack_down_to_result(stack_t *opers, stack_t *nums) {
 }
 
 int gocalc(stack_t *opers, stack_t *nums) {
-    double num1 = pop(nums);
+    double num1 = stack_peek(nums);
     double num2 = 0.0;
     double result = 0.0;
     int op = pop(opers);
@@ -225,15 +235,41 @@ int pars_n_add_ops(stack_t *opers, char *str, int i) {
             i += 3;
             push(opers, COS);
         }
-        if (str[i] == '-') push(opers, MINUS);
-        if (str[i] == '+') push(opers, PLUS);
-        if (str[i] == '*') push(opers, MUL);
-        if (str[i] == '/') push(opers, DEF);
-        if (str[i] == '%') push(opers, MOD);
-        if (str[i] == '^') push(opers, POW);
-        if (str[i] == ')') push(opers, CLOSE_BRACKET);
-        if (str[i] == '(') push(opers, OPEN_BRACKET);
+        if (str[i] == '-') {
+            push(opers, MINUS);
+            i++;
+        }
+    } else {
+        if (str[i] == '+') {
+            push(opers, PLUS);
+            i++;
+        }
+        if (str[i] == '*') {
+            push(opers, MUL);
+            i++;
+        }
+        if (str[i] == '/') {
+            push(opers, DEF);
+            i++;
+        }
+        if (str[i] == '%') {
+            push(opers, MOD);
+            i++;
+        }
+        if (str[i] == '^') {
+            push(opers, POW);
+            i++;
+        }
+        if (str[i] == ')') {
+            push(opers, CLOSE_BRACKET);
+            i++;
+        }
+        if (str[i] == '(') {
+            push(opers, OPEN_BRACKET);
+            i++;
+        }
     }
+    printf("pars&dd2: i = %d\n", i);
     return i;
 }
 // TODO: make batter with epxr like '-sin(-1)'

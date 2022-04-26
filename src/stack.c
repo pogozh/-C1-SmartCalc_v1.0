@@ -65,7 +65,11 @@ double pop(stack_t *stack) {
     return stack->data[stack->top];
 }
 
-double stack_peek(stack_t *stack) { return stack->data[stack->top]; }
+double stack_peek(stack_t *stack) {
+    double ret = -404;
+    if (stack->data != NULL) ret = stack->data[stack->top];
+    return ret;
+}
 
 void stack_print(stack_t *stack) {
     // printf("stack printing ...\n");
