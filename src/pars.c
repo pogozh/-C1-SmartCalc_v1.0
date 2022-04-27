@@ -8,10 +8,8 @@ double calculation(char *input) {
 
     int inpLen = strlen(input);
     int skip = check_repeated_opers(input);
-    if (!skip) skip = !valid_tail(input, inpLen);
-    if (skip == true) {
-        printf("\n ! error: operator repeated or validation faild \n");
-    } else {
+    if (!skip) skip = valid_tail(input, inpLen);
+    if (skip == false) {
         for (int i = 0; i < inpLen; i++) {
             int unary = 0;
             int flag = false;
@@ -20,14 +18,13 @@ double calculation(char *input) {
             if (is_digit(input[i]) == false)
                 i = pars_n_add_ops(&opers, input, i);
             // stack_print(&opers);
-            printf("opers peek %c\n",
-                   (stack_peek(&opers) == 400.0) ? '+' : 'N');
+            printf("peek %c\n", (stack_peek(&opers) == 400.0) ? '+' : 'N');
             // printf("opers.top =%f\n  ", opers.data[opers.top - 1]);
 
             if ((is_digit(input[i]) == true) &&
-                (unary = unary_oper(input, i) < 0))
+                (unary = unary_oper(input, i) > 0))
                 flag = true;
-            // printf("count unary= %d, flag = %d...\n", unary, flag);
+            printf("count unary= %d, flag = %d...\n", unary, flag);
 
             // START of adding float to stack opers
             if (is_digit(input[i])) {
@@ -56,7 +53,7 @@ double calculation(char *input) {
 
             } else if (flag == false) {
                 int prior = oper_priority(input[i]);
-                printf("i = %i, prior =  %d\n", i,
+                printf(" *** i = %i, prior =  %d\n", i,
                        oper_priority(input[i]));  // debag numers input
                 if (prior > 1 && prior < 9) {
                     /* if close bracket*/
@@ -77,8 +74,10 @@ double calculation(char *input) {
                     }
                 }
             }
-            printf("2:i = %d, input[i] = %c \n", i, input[i]);
+            // printf("2:i = %d, input[i] = %c \n", i, input[i]);
         }
+    } else {
+        printf("\n ! error: operator repeated or validation faild \n");
     }
 
     stack_print(&opers);
@@ -119,7 +118,7 @@ int gocalc(stack_t *opers, stack_t *nums) {
     double num1 = stack_peek(nums);
     double num2 = 0.0;
     double result = 0.0;
-    int op = pop(opers);
+    int op = stack_peek(opers);
     if (op == MINUS) {
         num2 = pop(nums);
         result = num2 - num1;
@@ -278,14 +277,14 @@ int pars_n_add_ops(stack_t *opers, char *str, int i) {
 // TODO: make batter with epxr like '-sin(-1)'
 int unary_oper(char *str, int i) {
     int unary = false;
-    if ((i > 0 && (is_digit(str[i - 1]) == false) && str[i - 1] == '(') ||
+    if ((i > 0 && str[i - 1] == '(') ||
         ((i == 0) && is_digit(str[i + 1]) == true)) {
         if (str[i] == '+')
-            unary = 1;
+            unary = 2;
         else if (str[i] == '-')
-            unary = -1;
+            unary = 1;
     }
-
+    // if ((i > 1) && (str[i-1] == '(') && str)
     return unary;
 }
 
@@ -315,7 +314,7 @@ int valid_tail(char *str, int len) {
         str[len - 1] != '.')
         valid = false;
     // printf("str[len - 1] = %c | valid = %d\n", str[len - 1], valid);
-    return valid;
+    return !valid;
 }
 
 // no needs

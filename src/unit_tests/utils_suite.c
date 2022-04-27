@@ -7,12 +7,9 @@
 START_TEST(first_test) {
     // test stack 01
     stack_t stack = create_stack();
-    // push(s, 111);
     int i = 0, j = 5;
-    stack_print(&stack);
     for (int i = 0; i < 5; i++) {
         push(&stack, i);
-        // stack_print(&stack); //db
     }
     // printf("!peek top = %f\n", stack_peek(&stack));
     for (; i < 5; i++) {
@@ -29,14 +26,13 @@ END_TEST
 START_TEST(second_test) {
     // parser subtest01
     stack_t oper = create_stack();
-    stack_print(&oper);
+    // stack_print(&oper);
     for (int i = 0; i < 10; i++) {
         push(&oper, i * 100);
-        // stack_print(&oper); //bd
     }
-    printf("peek top = %5.2f\n", stack_peek(&oper));
+    // printf("peek top = %5.2f\n", stack_peek(&oper));
     for (int i = 0; i < 10; i++) {
-        printf("%d ", funx_priority(oper.data[oper.top]));
+        // printf("%d ", funx_priority(oper.data[oper.top]));
         pop(&oper);
     }
     stack_delete(&oper);
@@ -64,7 +60,7 @@ START_TEST(second_test) {
     push(&oper, CLOSE_BRACKET);
     push(&oper, OPEN_BRACKET);
 
-    printf("peek top = %5.2f\n", stack_peek(&oper));
+    // printf("peek top = %5.2f\n", stack_peek(&oper));
     while (oper.top != 0) {
         printf("%d ", funx_priority(oper.data[oper.top]));
         pop(&oper);
@@ -76,16 +72,18 @@ START_TEST(second_test) {
 END_TEST
 
 START_TEST(unary_test) {
-    char str[] = "-1-(-2)--2-+2";  //- 2 + 3 - (-4) + (-2) +sin(0) ";
+    char str[] = "-1-(-2)-sin(+2)";  //- 2 + 3 - (-4) + (-2) +sin(0) ";
     int len = strlen(str);
     int sum = 0;
     for (int i = 0; i < len; i++) {
-        sum += unary_oper(str, i);
+        if (unary_oper(str, i) > 0) sum++;
+        // printf("\n unary sum!! = %d| unary_oper = %d\n", sum,
+        //        unary_oper(str, i));
     }
-    int valid = valid_tail(str, len);
-    // printf("\n !!unary sum!! = %d| valid = %d\n", sum, valid);
-    if (!valid) sum = 0;
-    ck_assert_int_eq(sum, -2);
+    int valid = !valid_tail(str, len);
+    printf("\n !!unary sum!! = %d| valid = %d\n", sum, valid);
+    // if (!valid) sum = 0;
+    ck_assert_int_eq(sum, 3);
 }
 END_TEST
 
