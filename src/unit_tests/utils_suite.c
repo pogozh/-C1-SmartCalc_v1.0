@@ -6,7 +6,7 @@
 
 START_TEST(first_test) {
     // test stack 01
-    stack_t stack = create_stack();
+    stack stack = create_stack();
     int i = 0, j = 5;
     for (int i = 0; i < 5; i++) {
         push(&stack, i);
@@ -25,7 +25,7 @@ END_TEST
 
 START_TEST(second_test) {
     // parser subtest01
-    stack_t oper = create_stack();
+    stack oper = create_stack();
     // stack_print(&oper);
     for (int i = 0; i < 10; i++) {
         push(&oper, i * 100);

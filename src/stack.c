@@ -5,8 +5,8 @@
 
 #define STD_SIZE 64
 
-stack_t create_stack() {
-    stack_t stack = {
+stack create_stack() {
+    stack stack = {
         .data = NULL,
         .top = -1,
         .size = 0,
@@ -14,13 +14,28 @@ stack_t create_stack() {
     return stack;
 }
 
-void stack_delete(stack_t *stack) {
+stack_t *create_init() {
+    stack_t *retval;
+    retval = (stack_t *)calloc(1, sizeof(stack_t));
+    retval->top = NULL;
+    retval->size = 0;
+    return retval;
+}
+
+void stack_free(stack_t stack, int value) {
+    while (stack.size > 0) {
+        lex *val2clean = stack_pop(stack, 0);
+        if (value) free(val2clean);
+    }
+}
+
+void stack_delete(stack *stack) {
     if (stack->data != NULL) free(stack->data);
     // stack = NULL;
     // printf("stack deleted\n");
 }
 
-bool stack_is_empty(stack_t *stack) {
+bool stack_is_empty(stack *stack) {
     bool state;
     if (stack->top < 0) {
         state = true;
@@ -31,7 +46,7 @@ bool stack_is_empty(stack_t *stack) {
     return state;
 }
 
-status_t push(stack_t *stack, double item) {
+status_t push(stack *stack, double item) {
     status_t status = 0;
     // printf("stack pushing ...\n"); debag
     if (stack_is_full(stack)) {
@@ -48,7 +63,7 @@ status_t push(stack_t *stack, double item) {
     return status;
 }
 
-bool stack_is_full(stack_t *stack) {
+bool stack_is_full(stack *stack) {
     bool state;
     if (stack->data == NULL || (stack->top >= stack->size - 1)) {
         state = true;
@@ -59,19 +74,19 @@ bool stack_is_full(stack_t *stack) {
     return state;
 }
 
-double pop(stack_t *stack) {
+double pop(stack *stack) {
     if (stack->top > 0) stack->top--;
     if ((stack->data) == NULL) printf("\n !!! Error: no stack->data\n");
     return stack->data[stack->top];
 }
 
-double stack_peek(stack_t *stack) {
+double stack_peek(stack *stack) {
     double ret = -404;
     if (stack->data != NULL) ret = stack->data[stack->top];
     return ret;
 }
 
-void stack_print(stack_t *stack) {
+void stack_print(stack *stack) {
     // printf("stack printing ...\n");
     // printf("stack->top = %ld \n", stack->top); //debag
     char *delimetr = "";

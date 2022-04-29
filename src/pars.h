@@ -34,16 +34,16 @@
 double calculation(char *exprassion);
 
 // utils
-int gocalc(stack_t *opers, stack_t *nums);
+int gocalc(stack *opers, stack *nums);
 int oper_priority(char oper);
 int funx_priority(int oper);
 int check_repeated_opers(char *str);
-int pars_n_add_ops(stack_t *opers, char *string, int i);
+int pars_n_add_ops(stack *opers, char *string, int i);
 int unary_oper(char *str, int i);
 int is_digit(char chr);
 int is_number(char *str, int i);
 int valid_tail(char *str, int len);
-double stack_down_to_result(stack_t *opers, stack_t *nums);
+double stack_down_to_result(stack *opers, stack *nums);
 
 #include "stack.h"
 #endif  // SRC_PARS_H_

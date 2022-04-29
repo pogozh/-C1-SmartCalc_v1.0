@@ -2,8 +2,8 @@
 
 double calculation(char *input) {
     double result = NAN;
-    stack_t nums = create_stack();
-    stack_t opers = create_stack();
+    stack nums = create_stack();
+    stack opers = create_stack();
     printf("debag calculation...\n");
 
     int inpLen = strlen(input);
@@ -91,7 +91,7 @@ double calculation(char *input) {
     return result;
 }
 
-double stack_down_to_result(stack_t *opers, stack_t *nums) {
+double stack_down_to_result(stack *opers, stack *nums) {
     double result = 0.0;
     while ((opers->top) > 0) {
         if (funx_priority(opers->data[opers->top]) >= 1 ||
@@ -114,7 +114,7 @@ double stack_down_to_result(stack_t *opers, stack_t *nums) {
     return result;
 }
 
-int gocalc(stack_t *opers, stack_t *nums) {
+int gocalc(stack *opers, stack *nums) {
     double num1 = stack_peek(nums);
     double num2 = 0.0;
     double result = 0.0;
@@ -206,7 +206,7 @@ int oper_priority(char oper) {
 }
 
 // TODO: add 1 symbol
-int pars_n_add_ops(stack_t *opers, char *str, int i) {
+int pars_n_add_ops(stack *opers, char *str, int i) {
     if (str[i] >= 'a' && str[i] <= 'z') {
         if (!strncmp("log(", str + i, 3)) {
             i += 3;
