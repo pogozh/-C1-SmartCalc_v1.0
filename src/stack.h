@@ -13,20 +13,21 @@ enum lexemeType { NUMBER, OPERATOR, FUNCTION, BRACKET, UNDEFINED };
 
 typedef struct lexemes {
     enum lexemeType type;
-    char val;
+    char chr;
     double num;
 } lex;
 
 // stack struct with lexem type in it
-typedef struct struct_elements stEl;
-struct struct_elements {
+typedef struct stack_elements stEl;
+struct stack_elements {
     lex *value;
     stEl *next;
+    stEl *prev;
 };
 
 typedef struct stacks {
     int size;
-    stEl *top;
+    stEl *head;
 } stack_t;
 
 // queue
@@ -41,7 +42,17 @@ typedef struct queue {
     quEl *tail;
 } que;
 
-// -----//
+stack_t *stack_init();
+lex *stack_pop(stack_t *stack, int freeFlag);
+void stack_free(stack_t *stack, int value);
+void stack_push(stack_t *stack, lex *new_value);
+bool stack_add_new_lex(stack_t *stack, lex new_value);
+
+lex *lex_init();
+void print_lexem(lex lex);
+void stack_print(stack_t *stack);
+
+// ---OLD---//
 
 typedef struct stack {
     double *data;
@@ -50,20 +61,12 @@ typedef struct stack {
 } stack;
 
 stack create_stack();
-
 void stack_delete(stack *stack);
-
 bool stack_is_empty(stack *stack);
-
 bool stack_is_full(stack *stack);
 status_t extend_stack(stack *stack);
-
 status_t push(stack *stack, double value);
-
 double pop(stack *stack);
-
 double stack_peek(stack *stack);
-
-void stack_print(stack *stack);
 
 #endif /* SRC_STACK_H_ */

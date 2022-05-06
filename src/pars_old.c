@@ -80,8 +80,8 @@ double calculation(char *input) {
         printf("\n ! error: operator repeated or validation faild \n");
     }
 
-    stack_print(&opers);
-    stack_print(&nums);
+    // stack_print(&opers);
+    // stack_print(&nums);
 
     result = stack_down_to_result(&opers, &nums);
 

@@ -21,7 +21,7 @@ TEST_OBJ_DIR = $(BUILD_DIR)/test
 calc_SOURCE =\
     stack.c\
     calc.c\
-    pars.c\
+    # pars.c\
 
 calc_OBJ = $(calc_SOURCE:%.c=%.o)
 calc_OBJ_PATH = $(addprefix $(calc_OBJ_DIR)/, $(calc_OBJ))

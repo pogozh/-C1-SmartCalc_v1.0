@@ -1,7 +1,5 @@
 #include "calc.h"
 
-#include "pars.h"
-
 // int main() {
 //     // test stack 01
 //     stack_t s = create_stack();

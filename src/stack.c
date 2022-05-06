@@ -5,94 +5,124 @@
 
 #define STD_SIZE 64
 
-stack create_stack() {
-    stack stack = {
-        .data = NULL,
-        .top = -1,
-        .size = 0,
-    };
-    return stack;
-}
-
-stack_t *create_init() {
-    stack_t *retval;
-    retval = (stack_t *)calloc(1, sizeof(stack_t));
-    retval->top = NULL;
-    retval->size = 0;
-    return retval;
-}
-
-void stack_free(stack_t stack, int value) {
-    while (stack.size > 0) {
-        lex *val2clean = stack_pop(stack, 0);
-        if (value) free(val2clean);
-    }
-}
-
-void stack_delete(stack *stack) {
-    if (stack->data != NULL) free(stack->data);
-    // stack = NULL;
-    // printf("stack deleted\n");
-}
-
-bool stack_is_empty(stack *stack) {
-    bool state;
-    if (stack->top < 0) {
-        state = true;
-    } else {
-        state = false;
-    }
-    // printf("stack empty %i\n", state ? true : false); //db
-    return state;
-}
-
-status_t push(stack *stack, double item) {
-    status_t status = 0;
-    // printf("stack pushing ...\n"); debag
-    if (stack_is_full(stack)) {
-        stack->size = (stack->size + 1) * 2;
-        stack->data =
-            (double *)realloc(stack->data, sizeof(double) * stack->size);
-        // printf("stack_ext");  // debag
-    } else {
-        status = OK;
-    }
-    stack->top += 1;
-    stack->data[stack->top] = item;
-
-    return status;
-}
-
-bool stack_is_full(stack *stack) {
-    bool state;
-    if (stack->data == NULL || (stack->top >= stack->size - 1)) {
-        state = true;
-    } else {
-        state = false;
-    }
-    // printf("stack is full =  %s\n", state ? "true" : "false"); debag
-    return state;
-}
-
-double pop(stack *stack) {
-    if (stack->top > 0) stack->top--;
-    if ((stack->data) == NULL) printf("\n !!! Error: no stack->data\n");
-    return stack->data[stack->top];
-}
-
-double stack_peek(stack *stack) {
-    double ret = -404;
-    if (stack->data != NULL) ret = stack->data[stack->top];
+stack_t *stack_init() {
+    stack_t *ret;
+    ret = (stack_t *)calloc(1, sizeof(stack_t));
+    ret->head = NULL;
+    ret->size = 0;
     return ret;
 }
 
-void stack_print(stack *stack) {
-    // printf("stack printing ...\n");
-    // printf("stack->top = %ld \n", stack->top); //debag
+lex *stack_pop(stack_t *stack, int freeFlag) {
+    lex *retval = NULL;
+    if (stack->size >= 1) {
+        stack->size--;
+        retval = stack->head->value;
+        stEl *trash = stack->head;
+
+        if (stack->size > 0) {
+            stack->head = stack->head->prev;
+            stack->head->next = NULL;
+        } else {
+            stack->head = NULL;
+        }
+
+        free(trash);
+    } else {
+        retval = NULL;
+    }
+
+    if (freeFlag) retval = NULL;
+    return retval;
+}
+
+void stack_push(stack_t *stack, lex *new_value) {
+    stEl *new_stack_element = (stEl *)calloc(1, sizeof(stEl));
+    new_stack_element->value = new_value;
+    if (stack->size > 0) {
+        stack->head->next = new_stack_element;
+        new_stack_element->prev = stack->head;
+    }
+    stack->head = new_stack_element;
+    stack->size++;
+}
+
+void stack_free(stack_t *stack, int flag) {
+    while (stack->size > 0) {
+        lex *val2clean = stack_pop(stack, 0);
+        if (flag) free(val2clean);
+    }
+    free(stack);
+}
+
+// LEXEMES UTILS
+
+bool stack_add_new_lex(stack_t *stack, lex new_value) {
+    int ret = 0;
+    lex *new_lex = (lex *)calloc(1, sizeof(lex));
+    if (new_lex != NULL) {
+        new_lex->num = new_value.num;
+        new_lex->type = new_value.type;
+        new_lex->chr = new_value.chr;
+        stack_push(stack, new_lex);
+        ret = true;
+    } else {
+        free(new_lex);
+    }
+
+    return ret;
+}
+
+lex *lex_init() {
+    lex new_lex = {
+        .num = 0,
+        .chr = '\0',
+        .type = UNDEFINED,
+    };
+    lex *plex;
+    plex = &new_lex;
+    return plex;
+}
+
+void stack_print(stack_t *stack) {
+    printf("!NEW STACK! printing ...\n");
+    lex *stlx = stack->head->value;
     char *delimetr = "";
-    for (int i = 0; i <= stack->top; i++) {
-        printf("%s%5.3f", delimetr, stack->data[i]);
-        delimetr = ", ";
+    int len = stack->size;
+    for (int i = 0; i < len; i++) {
+        if (stlx != NULL && stack->size > 0) {
+            stlx = stack_pop(stack, 0);
+            // printf("%s%5.3f", delimetr, stlx->num);
+            print_lexem(*stlx);
+            delimetr = ", ";
+        }
     }
     printf("\n");
+}
+
+void print_lexem(lex lex) {
+    printf("type: ");
+    switch (lex.type) {
+        case NUMBER:
+            printf("NUM");
+            break;
+        case OPERATOR:
+            printf("OP");
+            break;
+        case FUNCTION:
+            printf("FNC");
+            break;
+        case BRACKET:
+            printf("BR");
+            break;
+        case UNDEFINED:
+            printf("UND");
+            break;
+        default:
+            printf("N/A");
+            break;
+    }
+    fflush(stdout);
+    if (lex.type != UNDEFINED)
+        printf(" val:|%c| num:%5.3lf\n", lex.chr, lex.num);
 }
