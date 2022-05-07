@@ -20,6 +20,7 @@ TEST_OBJ_DIR = $(BUILD_DIR)/test
 # CREATE CALC FILES
 calc_SOURCE =\
     stack.c\
+	stack_queue.c\
     calc.c\
     # pars.c\
 

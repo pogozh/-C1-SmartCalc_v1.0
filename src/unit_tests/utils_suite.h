@@ -4,7 +4,6 @@
 #include <check.h>
 
 #include "../calc.h"
-#include "pars.h"
 
 Suite *utils_suite(void);
 

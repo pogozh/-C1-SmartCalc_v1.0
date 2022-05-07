@@ -8,6 +8,7 @@
 
 #include "errors.h"
 
+// STACK PART
 // lexem type for tokenize
 enum lexemeType { NUMBER, OPERATOR, FUNCTION, BRACKET, UNDEFINED };
 
@@ -30,11 +31,23 @@ typedef struct stacks {
     stEl *head;
 } stack_t;
 
-// queue
+stack_t *stack_init();
+lex *stack_pop(stack_t *stack, int freeFlag);
+void stack_free(stack_t *stack, int value);
+void stack_push(stack_t *stack, lex *new_value);
+bool stack_add_new_lex(stack_t *stack, lex new_value);
+
+// stack utils
+lex *lex_init();
+void print_lexem(lex lex);
+void stack_print(stack_t *stack);
+
+// QUEUE PART !
 typedef struct queue_elements quEl;
 struct queue_elements {
     lex *value;
     quEl *next;
+    quEl *prev;
 };
 
 typedef struct queue {
@@ -42,31 +55,10 @@ typedef struct queue {
     quEl *tail;
 } que;
 
-stack_t *stack_init();
-lex *stack_pop(stack_t *stack, int freeFlag);
-void stack_free(stack_t *stack, int value);
-void stack_push(stack_t *stack, lex *new_value);
-bool stack_add_new_lex(stack_t *stack, lex new_value);
-
-lex *lex_init();
-void print_lexem(lex lex);
-void stack_print(stack_t *stack);
-
-// ---OLD---//
-
-typedef struct stack {
-    double *data;
-    ssize_t top;
-    ssize_t size;
-} stack;
-
-stack create_stack();
-void stack_delete(stack *stack);
-bool stack_is_empty(stack *stack);
-bool stack_is_full(stack *stack);
-status_t extend_stack(stack *stack);
-status_t push(stack *stack, double value);
-double pop(stack *stack);
-double stack_peek(stack *stack);
-
+que *queue_init();
+lex *queue_pop(que *queue);
+void queue_push(que *queue, lex *new_value);
+void queue_free(que *queue, int flag);
+bool queue_add_new_lex(que *queue, lex new_value);
+void queue_print(que *queue);
 #endif /* SRC_STACK_H_ */

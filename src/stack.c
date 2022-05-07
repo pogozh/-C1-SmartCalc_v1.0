@@ -3,8 +3,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define STD_SIZE 64
-
 stack_t *stack_init() {
     stack_t *ret;
     ret = (stack_t *)calloc(1, sizeof(stack_t));
@@ -47,12 +45,15 @@ void stack_push(stack_t *stack, lex *new_value) {
     stack->size++;
 }
 
+// TODO: delete flag
 void stack_free(stack_t *stack, int flag) {
-    while (stack->size > 0) {
-        lex *val2clean = stack_pop(stack, 0);
-        if (flag) free(val2clean);
+    if (stack != NULL) {
+        while (stack->size > 0) {
+            lex *val2clean = stack_pop(stack, 0);
+            if (flag) free(val2clean);
+        }
+        free(stack);
     }
-    free(stack);
 }
 
 // LEXEMES UTILS
@@ -87,14 +88,14 @@ lex *lex_init() {
 void stack_print(stack_t *stack) {
     printf("!NEW STACK! printing ...\n");
     lex *stlx = stack->head->value;
-    char *delimetr = "";
+    // char *delimetr = "";
     int len = stack->size;
     for (int i = 0; i < len; i++) {
         if (stlx != NULL && stack->size > 0) {
             stlx = stack_pop(stack, 0);
             // printf("%s%5.3f", delimetr, stlx->num);
             print_lexem(*stlx);
-            delimetr = ", ";
+            // delimetr = ", ";
         }
     }
     printf("\n");
