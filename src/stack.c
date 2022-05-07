@@ -125,5 +125,5 @@ void print_lexem(lex lex) {
     }
     fflush(stdout);
     if (lex.type != UNDEFINED)
-        printf(" val:|%c| num:%5.3lf\n", lex.chr, lex.num);
+        printf(" chr:|%c| num:%5.3lf\n", lex.chr, lex.num);
 }

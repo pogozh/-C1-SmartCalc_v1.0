@@ -12,38 +12,17 @@
 #define s21_NEG_INFINITY -1.0 / 0.0
 #define s21_NAN 0.0 / 0.0
 
-#define SIN 801.0
-#define COS 802.0
-#define ASIN 811.0
-#define ACOS 812.0
-#define TAN 820.0
-#define ATAN 821.0
-#define SQRT 830.0
-#define LOG 840.0
-#define LN 850.0
-#define POW 700.0
-#define MOD 600.0
-#define MUL 500.0
-#define DEF 501.0
-#define PLUS 400.0
-#define MINUS 401.0
-#define OPEN_BRACKET 300.0
-#define CLOSE_BRACKET 200.0
-
-// main function
-double calculation(char *exprassion);
-
+// parser
+char parse_funx(char* str, int* len);
+char parse_bracket(char* str);
+char parse_op(char* str, int* len);
+void parse_num(char* str, int* ret_len, double* ret_num, char* ret_chr);
+// notation
+bool op_prior_cmp(char op1, char op2);
+int op_prior(char op);
+void rm_spaces(char* str);
+bool validate(lex curl, lex prevl);
 // utils
-int gocalc(stack *opers, stack *nums);
-int oper_priority(char oper);
-int funx_priority(int oper);
-int check_repeated_opers(char *str);
-int pars_n_add_ops(stack *opers, char *string, int i);
-int unary_oper(char *str, int i);
-int is_digit(char chr);
-int is_number(char *str, int i);
-int valid_tail(char *str, int len);
-double stack_down_to_result(stack *opers, stack *nums);
 
 #include "stack.h"
 #endif  // SRC_PARS_H_

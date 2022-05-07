@@ -22,7 +22,7 @@ calc_SOURCE =\
     stack.c\
 	stack_queue.c\
     calc.c\
-    # pars.c\
+    pars.c\
 
 calc_OBJ = $(calc_SOURCE:%.c=%.o)
 calc_OBJ_PATH = $(addprefix $(calc_OBJ_DIR)/, $(calc_OBJ))
@@ -81,12 +81,15 @@ tests: test.out
 
 # CLEAN TARGET
 clean:
+	# rm ./gcov_report/*.*
+	# rm ./gcov_report/src/*.*
 	find . -type f -name "*.o" -delete
 	find . -type f -name "*.d" -delete
 	find . -type f -name "*.a" -delete
 	find . -name "*.out" -delete
 	find . -name "*.gcno" -delete
 	find . -name "*.gcda" -delete
+	rm -rf /gcov_report/*.*
 	rm -rf report
 	rm -rf gcovreport.info
 	rm -rf gcovreport
