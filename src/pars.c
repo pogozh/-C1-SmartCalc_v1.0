@@ -1,8 +1,60 @@
 #include "pars.h"
-// PARCER
+// PARSER
+bool pars_lexeme(char* str, lex* retlex, int* retLen, bool unarop) {
+    bool parsed = false;
+    int parsChr = FAILD;
+    if (retlex != NULL) {
+        retlex->num = 0;
+        retlex->chr = '\0';
+        retlex->type = UNDEFINED;
+
+        if ((parsChr = parse_funx(str, retLen)) != FAILD) {
+            retlex->type = FUNCTION;
+            retlex->chr = parsChr;
+            parsed = true;
+        } else if ((parsChr = parse_bracket(str)) != FAILD) {
+            *retLen = 1;
+            retlex->type = BRACKET;
+            retlex->chr = parsChr;
+            parsed = true;
+        } else {
+            double num;
+            char chr;
+            int opLen;
+            parsChr = parse_op(str, &opLen);
+            parse_num(str, retLen, &num, &chr);
+            if (parsChr != FAILD) {
+                if (strchr("+-", parsChr) != NULL && unarop && *retLen > 0) {
+                    retlex->type = NUMBER;
+                    retlex->num = num;
+                    retlex->chr = parsChr;
+                    parsed = true;
+                } else {
+                    retlex->type = OPERATOR;
+                    retlex->chr = parsChr;
+                    *retLen = opLen;
+                    parsed = true;
+                }
+            }
+        }
+
+        if (parsed == false) {
+            double num;
+            char chr;
+            parse_num(str, retLen, &num, &chr);
+            if (*retLen > 0) {
+                retlex->type = NUMBER;
+                retlex->num = num;
+                retlex->chr = chr;
+                parsed = true;
+            }
+        }
+    }
+    return parsed;
+}
 
 char parse_funx(char* str, int* len) {
-    char ret = -1;
+    char ret = FAILD;
 
     if (strstr(str, "cos") == str || strstr(str, "sin") == str ||
         strstr(str, "tan") == str || strstr(str, "ln") == str) {
@@ -10,14 +62,14 @@ char parse_funx(char* str, int* len) {
         ret = str[0];
         if (ret == 'l') *len = 2;
     }
-    if ((ret == -1) &&
+    if ((ret == FAILD) &&
         (strstr(str, "acos") == str || strstr(str, "asin") == str ||
          strstr(str, "atan") == str || strstr(str, "sqrt") == str)) {
         *len = 4;
         ret = str[1];
         if (str[1] != 'q') ret -= 32;
     }
-    if ((ret == -1) && strstr(str, "log") == str) {
+    if ((ret == FAILD) && strstr(str, "log") == str) {
         *len = 3;
         ret = 'L';
     }
@@ -25,22 +77,30 @@ char parse_funx(char* str, int* len) {
 }
 
 char parse_bracket(char* str) {
-    char ret = -1;
-    if (strstr(str, "(") == str) ret = '(';
-    if (strstr(str, ")") == str) ret = ')';
+    char ret = FAILD;
+    if (strstr(str, "(") == str)
+        ret = '(';
+    else if (strstr(str, ")") == str)
+        ret = ')';
     return ret;
 }
 
 char parse_op(char* str, int* len) {
-    char ret = -1;
-    if (strstr(str, "+") == str) ret = '+';
-    if (strstr(str, "-") == str) ret = '-';
-    if (strstr(str, "*") == str) ret = '*';
-    if (strstr(str, "/") == str) ret = '/';
-    if (strstr(str, "^") == str) ret = '^';
-    if (strstr(str, "mod") == str) ret = 'm';
+    char ret = FAILD;
+    if (strstr(str, "+") == str)
+        ret = '+';
+    else if (strstr(str, "-") == str)
+        ret = '-';
+    else if (strstr(str, "*") == str)
+        ret = '*';
+    else if (strstr(str, "/") == str)
+        ret = '/';
+    else if (strstr(str, "^") == str)
+        ret = '^';
+    else if (strstr(str, "mod") == str)
+        ret = 'm';
 
-    if (ret != -1) *len = 1;
+    if (ret != FAILD) *len = 1;
     if (str[0] == 'm') *len = 3;
     return ret;
 }
@@ -67,6 +127,37 @@ void parse_num(char* str, int* ret_len, double* ret_num, char* ret_chr) {
 }
 
 // POLISH NOTATION
+bool str2polish(char* string, que** retqueue) {
+    int status = true;
+    stack_t* tempst = stack_init();
+    *retqueue = queue_init();
+    char *str = NULL, *origstr = NULL;
+    if ((string != NULL)) {
+        int len = strlen(string);
+        str = (char*)calloc(sizeof(char), len + 10);
+        origstr = str;
+        snprintf(str, len + 9, "%s", string);
+        rm_spaces(str);
+        if (strlen(str) <= 0) status = false;
+    }
+    int unary = true;
+    lex prevlex, curlex;
+    prevlex.type = UNDEFINED;
+    while (status && *str != '\0') {
+        int curlen = 0;
+        if (validate(curlex, prevlex) &&
+            pars_lexeme(str, &curlex, &curlen, unary)) {
+            unary = (curlex.type == OPERATOR || curlex.chr == '(');
+            str += curlen;
+        }
+    }
+    if (curlex.type != NUMBER && curlex.chr != ')') status = false;
+    while (tempst->size > 0)
+        if (origstr != NULL) free(origstr);
+    stack_free(tempst);
+    return status;
+}
+
 bool validate(lex curl, lex prevl) {
     bool retval = true;
     switch (prevl.type) {

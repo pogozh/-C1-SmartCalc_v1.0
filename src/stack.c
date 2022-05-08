@@ -46,11 +46,11 @@ void stack_push(stack_t *stack, lex *new_value) {
 }
 
 // TODO: delete flag
-void stack_free(stack_t *stack, int flag) {
+void stack_free(stack_t *stack) {
     if (stack != NULL) {
         while (stack->size > 0) {
             lex *val2clean = stack_pop(stack, 0);
-            if (flag) free(val2clean);
+            free(val2clean);
         }
         free(stack);
     }
@@ -74,28 +74,21 @@ bool stack_add_new_lex(stack_t *stack, lex new_value) {
     return ret;
 }
 
-lex *lex_init() {
-    lex new_lex = {
-        .num = 0,
-        .chr = '\0',
-        .type = UNDEFINED,
-    };
-    lex *plex;
-    plex = &new_lex;
-    return plex;
+lex lex_init() {
+    lex new_lex = {.num = 0, .chr = '\0', .type = UNDEFINED};
+    return new_lex;
 }
 
 void stack_print(stack_t *stack) {
     printf("!NEW STACK! printing ...\n");
     lex *stlx = stack->head->value;
-    // char *delimetr = "";
     int len = stack->size;
+
     for (int i = 0; i < len; i++) {
         if (stlx != NULL && stack->size > 0) {
             stlx = stack_pop(stack, 0);
-            // printf("%s%5.3f", delimetr, stlx->num);
             print_lexem(*stlx);
-            // delimetr = ", ";
+            free(stlx);
         }
     }
     printf("\n");

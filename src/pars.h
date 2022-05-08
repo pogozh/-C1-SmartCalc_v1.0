@@ -11,12 +11,13 @@
 #define s21_INFINITY 1.0 / 0.0
 #define s21_NEG_INFINITY -1.0 / 0.0
 #define s21_NAN 0.0 / 0.0
-
+#define FAILD -1
 // parser
 char parse_funx(char* str, int* len);
 char parse_bracket(char* str);
 char parse_op(char* str, int* len);
 void parse_num(char* str, int* ret_len, double* ret_num, char* ret_chr);
+bool pars_lexeme(char* str, lex* retlex, int* retlen, bool unarop);
 // notation
 bool op_prior_cmp(char op1, char op2);
 int op_prior(char op);

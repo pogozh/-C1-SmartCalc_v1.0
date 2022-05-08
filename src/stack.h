@@ -33,12 +33,12 @@ typedef struct stacks {
 
 stack_t *stack_init();
 lex *stack_pop(stack_t *stack, int freeFlag);
-void stack_free(stack_t *stack, int value);
+void stack_free(stack_t *stack);
 void stack_push(stack_t *stack, lex *new_value);
 bool stack_add_new_lex(stack_t *stack, lex new_value);
 
 // stack utils
-lex *lex_init();
+lex lex_init();
 void print_lexem(lex lex);
 void stack_print(stack_t *stack);
 
@@ -58,7 +58,7 @@ typedef struct queue {
 que *queue_init();
 lex *queue_pop(que *queue);
 void queue_push(que *queue, lex *new_value);
-void queue_free(que *queue, int flag);
+void queue_free(que *queue);
 bool queue_add_new_lex(que *queue, lex new_value);
 void queue_print(que *queue);
 #endif /* SRC_STACK_H_ */

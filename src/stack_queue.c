@@ -19,8 +19,8 @@ lex *queue_pop(que *queue) {
         quEl *trash = queue->tail;
 
         if (queue->size > 0) {
-            queue->tail = queue->tail->prev;
-            queue->tail->next = NULL;
+            queue->tail = queue->tail->next;
+            queue->tail->prev = NULL;
         } else {
             queue->tail = NULL;
         }
@@ -36,20 +36,25 @@ lex *queue_pop(que *queue) {
 void queue_push(que *queue, lex *new_value) {
     quEl *new_queue_element = (quEl *)calloc(1, sizeof(quEl));
     new_queue_element->value = new_value;
-    if (queue->size > 0) {
-        queue->tail->next = new_queue_element;
-        new_queue_element->prev = queue->tail;
+    if (queue->size >= 0) {
+        if (queue->size > 0) {
+            quEl *head = queue->tail;
+            while (head->next != NULL) {
+                head = head->next;
+            }
+            head->next = new_queue_element;
+        } else {
+            queue->tail = new_queue_element;
+        }
+        queue->size++;
     }
-    queue->tail = new_queue_element;
-    queue->size++;
 }
 
-// TODO: delete flag
-void queue_free(que *queue, int flag) {
+void queue_free(que *queue) {
     if (queue != NULL) {
         while (queue->size > 0) {
             lex *val2clean = queue_pop(queue);
-            if (flag) free(val2clean);
+            free(val2clean);
         }
         free(queue);
     }
@@ -80,8 +85,8 @@ void queue_print(que *queue) {
     for (int i = 0; i < len; i++) {
         if (stlx != NULL && queue->size > 0) {
             stlx = queue_pop(queue);
-            // printf("%5.3f ", stlx->num);
             print_lexem(*stlx);
+            free(stlx);
         }
     }
     printf("\n");
