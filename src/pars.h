@@ -19,6 +19,7 @@ char parse_op(char* str, int* len);
 void parse_num(char* str, int* ret_len, double* ret_num, char* ret_chr);
 bool pars_lexeme(char* str, lex* retlex, int* retlen, bool unarop);
 // notation
+bool str_to_polish(char* string, que** retqueue);
 bool op_prior_cmp(char op1, char op2);
 int op_prior(char op);
 void rm_spaces(char* str);

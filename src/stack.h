@@ -21,7 +21,7 @@ typedef struct lexemes {
 // stack struct with lexem type in it
 typedef struct stack_elements stEl;
 struct stack_elements {
-    lex *value;
+    lex *lexi;
     stEl *next;
     stEl *prev;
 };
@@ -45,7 +45,7 @@ void stack_print(stack_t *stack);
 // QUEUE PART !
 typedef struct queue_elements quEl;
 struct queue_elements {
-    lex *value;
+    lex *lexi;
     quEl *next;
     quEl *prev;
 };

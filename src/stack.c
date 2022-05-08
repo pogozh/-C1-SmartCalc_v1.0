@@ -15,7 +15,7 @@ lex *stack_pop(stack_t *stack, int freeFlag) {
     lex *retval = NULL;
     if (stack->size >= 1) {
         stack->size--;
-        retval = stack->head->value;
+        retval = stack->head->lexi;
         stEl *trash = stack->head;
 
         if (stack->size > 0) {
@@ -36,7 +36,7 @@ lex *stack_pop(stack_t *stack, int freeFlag) {
 
 void stack_push(stack_t *stack, lex *new_value) {
     stEl *new_stack_element = (stEl *)calloc(1, sizeof(stEl));
-    new_stack_element->value = new_value;
+    new_stack_element->lexi = new_value;
     if (stack->size > 0) {
         stack->head->next = new_stack_element;
         new_stack_element->prev = stack->head;
@@ -81,7 +81,7 @@ lex lex_init() {
 
 void stack_print(stack_t *stack) {
     printf("!NEW STACK! printing ...\n");
-    lex *stlx = stack->head->value;
+    lex *stlx = stack->head->lexi;
     int len = stack->size;
 
     for (int i = 0; i < len; i++) {

@@ -42,211 +42,211 @@ START_TEST(queue_test01) {
 }
 END_TEST
 
-// START_TEST(prior_test01) {
-//     char op1 = '+';
-//     char op2 = '-';
-//     ck_assert_int_eq(op_prior_cmp(op1, op2), true);
+START_TEST(prior_test01) {
+    char op1 = '+';
+    char op2 = '-';
+    ck_assert_int_eq(op_prior_cmp(op1, op2), true);
 
-//     op1 = '*';
-//     op2 = '/';
-//     ck_assert_int_eq(op_prior_cmp(op1, op2), true);
+    op1 = '*';
+    op2 = '/';
+    ck_assert_int_eq(op_prior_cmp(op1, op2), true);
 
-//     op1 = '*';
-//     op2 = 's';
-//     ck_assert_int_eq(op_prior_cmp(op1, op2), true);
+    op1 = '*';
+    op2 = 's';
+    ck_assert_int_eq(op_prior_cmp(op1, op2), true);
 
-//     op1 = 'm';
-//     op2 = 'T';
-//     ck_assert_int_eq(op_prior_cmp(op1, op2), true);
+    op1 = 'm';
+    op2 = 'T';
+    ck_assert_int_eq(op_prior_cmp(op1, op2), true);
 
-//     op1 = '^';
-//     op2 = '^';
-//     ck_assert_int_eq(op_prior_cmp(op1, op2), false);
-// }
-// END_TEST
+    op1 = '^';
+    op2 = '^';
+    ck_assert_int_eq(op_prior_cmp(op1, op2), false);
+}
+END_TEST
 
-// START_TEST(valid_test01) {
-//     lex prevl;
-//     prevl.type = NUMBER;
-//     lex curl;
-//     curl.type = OPERATOR;
-//     ck_assert_int_eq(validate(curl, prevl), true);
+START_TEST(valid_test01) {
+    lex prevl;
+    prevl.type = NUMBER;
+    lex curl;
+    curl.type = OPERATOR;
+    ck_assert_int_eq(validate(curl, prevl), true);
 
-//     prevl.type = NUMBER;
-//     curl.type = 7;
-//     curl.chr = ')';
-//     ck_assert_int_eq(validate(curl, prevl), true);
+    prevl.type = NUMBER;
+    curl.type = 7;
+    curl.chr = ')';
+    ck_assert_int_eq(validate(curl, prevl), true);
 
-//     prevl.type = OPERATOR;
-//     curl.type = NUMBER;
-//     curl.chr = ')';
-//     ck_assert_int_eq(validate(curl, prevl), true);
+    prevl.type = OPERATOR;
+    curl.type = NUMBER;
+    curl.chr = ')';
+    ck_assert_int_eq(validate(curl, prevl), true);
 
-//     prevl.type = OPERATOR;
-//     curl.type = 6;
-//     curl.chr = '(';
-//     ck_assert_int_eq(validate(curl, prevl), true);
+    prevl.type = OPERATOR;
+    curl.type = 6;
+    curl.chr = '(';
+    ck_assert_int_eq(validate(curl, prevl), true);
 
-//     prevl.type = OPERATOR;
-//     curl.type = FUNCTION;
-//     curl.chr = ')';
-//     ck_assert_int_eq(validate(curl, prevl), true);
+    prevl.type = OPERATOR;
+    curl.type = FUNCTION;
+    curl.chr = ')';
+    ck_assert_int_eq(validate(curl, prevl), true);
 
-//     prevl.type = FUNCTION;
-//     curl.chr = '(';
-//     ck_assert_int_eq(validate(curl, prevl), true);
+    prevl.type = FUNCTION;
+    curl.chr = '(';
+    ck_assert_int_eq(validate(curl, prevl), true);
 
-//     prevl.type = BRACKET;
-//     prevl.chr = '(';
-//     curl.type = FUNCTION;
-//     ck_assert_int_eq(validate(curl, prevl), true);
+    prevl.type = BRACKET;
+    prevl.chr = '(';
+    curl.type = FUNCTION;
+    ck_assert_int_eq(validate(curl, prevl), true);
 
-//     prevl.type = BRACKET;
-//     prevl.chr = '(';
-//     curl.type = NUMBER;
-//     ck_assert_int_eq(validate(curl, prevl), true);
+    prevl.type = BRACKET;
+    prevl.chr = '(';
+    curl.type = NUMBER;
+    ck_assert_int_eq(validate(curl, prevl), true);
 
-//     prevl.type = BRACKET;
-//     prevl.chr = '(';
-//     curl.type = OPERATOR;
-//     ck_assert_int_eq(validate(curl, prevl), false);
-//     //
-//     prevl.type = BRACKET;
-//     prevl.chr = ')';
-//     curl.type = OPERATOR;
-//     ck_assert_int_eq(validate(curl, prevl), true);
+    prevl.type = BRACKET;
+    prevl.chr = '(';
+    curl.type = OPERATOR;
+    ck_assert_int_eq(validate(curl, prevl), false);
+    //
+    prevl.type = BRACKET;
+    prevl.chr = ')';
+    curl.type = OPERATOR;
+    ck_assert_int_eq(validate(curl, prevl), true);
 
-//     prevl.type = BRACKET;
-//     prevl.chr = ')';
-//     curl.chr = ')';
-//     ck_assert_int_eq(validate(curl, prevl), true);
+    prevl.type = BRACKET;
+    prevl.chr = ')';
+    curl.chr = ')';
+    ck_assert_int_eq(validate(curl, prevl), true);
 
-//     prevl.type = BRACKET;
-//     prevl.chr = ')';
-//     curl.type = NUMBER;
-//     curl.chr = '*';
-//     ck_assert_int_eq(validate(curl, prevl), false);
+    prevl.type = BRACKET;
+    prevl.chr = ')';
+    curl.type = NUMBER;
+    curl.chr = '*';
+    ck_assert_int_eq(validate(curl, prevl), false);
 
-//     prevl.type = UNDEFINED;
-//     curl.type = FUNCTION;
-//     ck_assert_int_eq(validate(curl, prevl), true);
+    prevl.type = UNDEFINED;
+    curl.type = FUNCTION;
+    ck_assert_int_eq(validate(curl, prevl), true);
 
-//     prevl.type = UNDEFINED;
-//     curl.type = NUMBER;
-//     ck_assert_int_eq(validate(curl, prevl), true);
+    prevl.type = UNDEFINED;
+    curl.type = NUMBER;
+    ck_assert_int_eq(validate(curl, prevl), true);
 
-//     prevl.type = UNDEFINED;
-//     curl.type = UNDEFINED;
-//     curl.chr = '(';
-//     ck_assert_int_eq(validate(curl, prevl), true);
+    prevl.type = UNDEFINED;
+    curl.type = UNDEFINED;
+    curl.chr = '(';
+    ck_assert_int_eq(validate(curl, prevl), true);
 
-//     prevl.type = UNDEFINED;
-//     curl.type = UNDEFINED;
-//     curl.chr = '+';
-//     ck_assert_int_eq(validate(curl, prevl), false);
-// }
-// END_TEST
+    prevl.type = UNDEFINED;
+    curl.type = UNDEFINED;
+    curl.chr = '+';
+    ck_assert_int_eq(validate(curl, prevl), false);
+}
+END_TEST
 
-// START_TEST(rm_sp_test01) {
-//     char op1[] = "de1ete 8*\%space s ";
-//     char op2[] = "de1ete8*\%spaces";
-//     // printf("%s \n", op1);
-//     rm_spaces(op1);
-//     // printf("%s \n", op1);
-//     ck_assert_int_eq(strcmp(op1, op2), 0);
-// }
-// END_TEST
+START_TEST(rm_sp_test01) {
+    char op1[] = "de1ete 8*\%space s ";
+    char op2[] = "de1ete8*\%spaces";
+    // printf("%s \n", op1);
+    rm_spaces(op1);
+    // printf("%s \n", op1);
+    ck_assert_int_eq(strcmp(op1, op2), 0);
+}
+END_TEST
 
-// START_TEST(pars_funx_test01) {
-//     char *str = "cosi";
-//     int len = 0;
-//     // printf("cosi = %c \n", pars_funx(str, &len));
-//     parse_funx(str, &len);
-//     ck_assert_int_eq(len, 3);
+START_TEST(pars_funx_test01) {
+    char *str = "cosi";
+    int len = 0;
+    // printf("cosi = %c \n", pars_funx(str, &len));
+    parse_funx(str, &len);
+    ck_assert_int_eq(len, 3);
 
-//     char *str1 = "sosi";
-//     len = 0;
-//     // printf("sosi = %c \n", pars_funx(str1, &len));
-//     parse_funx(str1, &len);
-//     ck_assert_int_eq(len, 0);
+    char *str1 = "sosi";
+    len = 0;
+    // printf("sosi = %c \n", pars_funx(str1, &len));
+    parse_funx(str1, &len);
+    ck_assert_int_eq(len, 0);
 
-//     char *str2 = "sin";
-//     // printf("sin = %c \n", parse_funx(str2, &len));
-//     parse_funx(str2, &len);
-//     ck_assert_int_eq(len, 3);
+    char *str2 = "sin";
+    // printf("sin = %c \n", parse_funx(str2, &len));
+    parse_funx(str2, &len);
+    ck_assert_int_eq(len, 3);
 
-//     char *str3 = "asin";
-//     // printf("asin = %c \n", parse_funx(str3, &len));
-//     parse_funx(str3, &len);
-//     ck_assert_int_eq(len, 4);
+    char *str3 = "asin";
+    // printf("asin = %c \n", parse_funx(str3, &len));
+    parse_funx(str3, &len);
+    ck_assert_int_eq(len, 4);
 
-//     char *str4 = "acos";
-//     // printf("acos = %c \n", parse_funx(str4, &len));
-//     parse_funx(str4, &len);
-//     ck_assert_int_eq(len, 4);
+    char *str4 = "acos";
+    // printf("acos = %c \n", parse_funx(str4, &len));
+    parse_funx(str4, &len);
+    ck_assert_int_eq(len, 4);
 
-//     char *str5 = "atan";
-//     // printf("atan = %c \n", parse_funx(str5, &len));
-//     parse_funx(str5, &len);
-//     ck_assert_int_eq(len, 4);
+    char *str5 = "atan";
+    // printf("atan = %c \n", parse_funx(str5, &len));
+    parse_funx(str5, &len);
+    ck_assert_int_eq(len, 4);
 
-//     char *str6 = "sqrt";
-//     // printf("sqrt = %c \n", parse_funx(str6, &len));
-//     parse_funx(str6, &len);
-//     ck_assert_int_eq(len, 4);
+    char *str6 = "sqrt";
+    // printf("sqrt = %c \n", parse_funx(str6, &len));
+    parse_funx(str6, &len);
+    ck_assert_int_eq(len, 4);
 
-//     char *str8 = "log";
-//     // printf("log = %c \n", parse_funx(str8, &len));
-//     parse_funx(str8, &len);
-//     ck_assert_int_eq(len, 3);
+    char *str8 = "log";
+    // printf("log = %c \n", parse_funx(str8, &len));
+    parse_funx(str8, &len);
+    ck_assert_int_eq(len, 3);
 
-//     char *str7 = "ln";
-//     // printf("ln = %c \n", parse_funx(str7, &len));
-//     parse_funx(str7, &len);
-//     ck_assert_int_eq(len, 2);
-// }
-// END_TEST
+    char *str7 = "ln";
+    // printf("ln = %c \n", parse_funx(str7, &len));
+    parse_funx(str7, &len);
+    ck_assert_int_eq(len, 2);
+}
+END_TEST
 
-// START_TEST(pars_num_test01) {
-//     char *str = "-333.4";
-//     int len;
-//     double ret_num;
-//     char ret_chr;
-//     parse_num(str, &len, &ret_num, &ret_chr);
-//     printf("len %.3lf = %d\n", ret_num, len);
-//     ck_assert_int_eq(len, 6);
+START_TEST(pars_num_test01) {
+    char *str = "-333.4";
+    int len;
+    double ret_num;
+    char ret_chr;
+    parse_num(str, &len, &ret_num, &ret_chr);
+    printf("len %.3lf = %d\n", ret_num, len);
+    ck_assert_int_eq(len, 6);
 
-//     char *str1 = "23 x 333.4";
-//     parse_num(str1, &len, &ret_num, &ret_chr);
-//     printf("len %.3lf = %d\n", ret_num, len);
-//     ck_assert_int_eq(len, 3);
+    char *str1 = "23 x 333.4";
+    parse_num(str1, &len, &ret_num, &ret_chr);
+    printf("len %.3lf = %d\n", ret_num, len);
+    ck_assert_int_eq(len, 3);
 
-//     char *str2 = "x ";
-//     parse_num(str2, &len, &ret_num, &ret_chr);
-//     printf("len %.3lf %c = %d \n", ret_num, ret_chr, len);
-//     ck_assert_int_eq(len, 1);
+    char *str2 = "x ";
+    parse_num(str2, &len, &ret_num, &ret_chr);
+    printf("len %.3lf %c = %d \n", ret_num, ret_chr, len);
+    ck_assert_int_eq(len, 1);
 
-//     // parse operators
-//     len = 0;
-//     char *str3 = "+-";
-//     char op = parse_op(str3, &len);
-//     printf("lenop %c = %d \n", op, len);
-//     ck_assert_int_eq(len, 1);
+    // parse operators
+    len = 0;
+    char *str3 = "+-";
+    char op = parse_op(str3, &len);
+    printf("lenop %c = %d \n", op, len);
+    ck_assert_int_eq(len, 1);
 
-//     len = 0;
-//     char *str4 = "mode";
-//     op = parse_op(str4, &len);
-//     printf("lenop %c = %d \n", op, len);
-//     ck_assert_int_eq(len, 3);
-// }
-// END_TEST
+    len = 0;
+    char *str4 = "mode";
+    op = parse_op(str4, &len);
+    printf("lenop %c = %d \n", op, len);
+    ck_assert_int_eq(len, 3);
+}
+END_TEST
 
 START_TEST(pars_lexeme_test01) {
     char *str = "tan-cos(2)";
     int retlen;
     int unary = true;
     lex lexret = lex_init();
-    // TODO: -sin
+
     pars_lexeme(str, &lexret, &retlen, unary);
     printf("len: %c = %d: ", lexret.chr, retlen);
     print_lexem(lexret);
@@ -280,18 +280,37 @@ START_TEST(pars_lexeme_test01) {
 }
 END_TEST
 
+START_TEST(str2que_test01) {
+    char *str = "1+1 ";
+    int retlen;
+    int unary = true;
+    lex lexret = lex_init();
+    //  pars_lexeme(str, &lexret, &retlen, unary);
+    printf("len: %c = %d: ", lexret.chr, retlen);
+    print_lexem(lexret);
+
+    char *str1 = "-3";
+    pars_lexeme(str1, &lexret, &retlen, unary);
+    printf("len: %c = %d: ", lexret.chr, retlen);
+    print_lexem(lexret);
+
+    ck_assert_int_eq(retlen, 2);
+}
+END_TEST
+
 Suite *utils_suite(void) {
     Suite *suite = suite_create("utils suite");
     TCase *cases = tcase_create("utils case");
 
     tcase_add_test(cases, stack_test01);
     tcase_add_test(cases, queue_test01);
-    // tcase_add_test(cases, prior_test01);
-    // tcase_add_test(cases, rm_sp_test01);
-    // tcase_add_test(cases, valid_test01);
-    // tcase_add_test(cases, pars_funx_test01);
-    // tcase_add_test(cases, pars_num_test01);
+    tcase_add_test(cases, prior_test01);
+    tcase_add_test(cases, rm_sp_test01);
+    tcase_add_test(cases, valid_test01);
+    tcase_add_test(cases, pars_funx_test01);
+    tcase_add_test(cases, pars_num_test01);
     tcase_add_test(cases, pars_lexeme_test01);
+    tcase_add_test(cases, str2que_test01);
 
     tcase_set_timeout(cases, 999999);
     suite_add_tcase(suite, cases);

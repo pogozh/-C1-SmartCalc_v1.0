@@ -15,7 +15,7 @@ lex *queue_pop(que *queue) {
     lex *retval = NULL;
     if (queue->size >= 1) {
         queue->size--;
-        retval = queue->tail->value;
+        retval = queue->tail->lexi;
         quEl *trash = queue->tail;
 
         if (queue->size > 0) {
@@ -35,7 +35,7 @@ lex *queue_pop(que *queue) {
 
 void queue_push(que *queue, lex *new_value) {
     quEl *new_queue_element = (quEl *)calloc(1, sizeof(quEl));
-    new_queue_element->value = new_value;
+    new_queue_element->lexi = new_value;
     if (queue->size >= 0) {
         if (queue->size > 0) {
             quEl *head = queue->tail;
@@ -80,7 +80,7 @@ bool queue_add_new_lex(que *queue, lex new_value) {
 
 void queue_print(que *queue) {
     printf("!NEW QUEUE! printing ...\n");
-    lex *stlx = queue->tail->value;
+    lex *stlx = queue->tail->lexi;
     int len = queue->size;
     for (int i = 0; i < len; i++) {
         if (stlx != NULL && queue->size > 0) {

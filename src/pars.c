@@ -127,12 +127,12 @@ void parse_num(char* str, int* ret_len, double* ret_num, char* ret_chr) {
 }
 
 // POLISH NOTATION
-bool str2polish(char* string, que** retqueue) {
+bool str_to_polish(char* string, que** retqueue) {
     int status = true;
     stack_t* tempst = stack_init();
     *retqueue = queue_init();
     char *str = NULL, *origstr = NULL;
-    if ((string != NULL)) {
+    if ((status = (string != NULL))) {
         int len = strlen(string);
         str = (char*)calloc(sizeof(char), len + 10);
         origstr = str;
@@ -140,6 +140,7 @@ bool str2polish(char* string, que** retqueue) {
         rm_spaces(str);
         if (strlen(str) <= 0) status = false;
     }
+
     int unary = true;
     lex prevlex, curlex;
     prevlex.type = UNDEFINED;
@@ -149,11 +150,64 @@ bool str2polish(char* string, que** retqueue) {
             pars_lexeme(str, &curlex, &curlen, unary)) {
             unary = (curlex.type == OPERATOR || curlex.chr == '(');
             str += curlen;
+
+            // SORT STATION START
+
+            // 1. if current char is number -> add lexeme to output queue
+            if (curlex.type == NUMBER) queue_add_new_lex(*retqueue, curlex);
+            // 2. if current char is function -> add lexeme to stack
+            if (curlex.type == FUNCTION || curlex.chr == '(')
+                stack_add_new_lex(tempst, curlex);
+            // 3. if current char is operator
+            if (curlex.type == OPERATOR) {
+                while (tempst->size > 0 &&
+                       op_prior_cmp(curlex.chr, tempst->head->lexi->chr) &&
+                       (tempst->head->lexi->type == FUNCTION ||
+                        tempst->head->lexi->type == OPERATOR))
+                    queue_push(*retqueue, stack_pop(tempst, 0));
+
+                stack_add_new_lex(tempst, curlex);
+            }
+            // 4. if current cher = )
+            if (curlex.chr == ')') {
+                if (tempst->size <= 0) {
+                    status = false;
+                    break;
+                } else {
+                    // put from stack to queue untill find '(' in stack
+                    while (tempst->head->lexi->chr != '(') {
+                        queue_push(*retqueue, stack_pop(tempst, 0));
+                        if (tempst->size <= 0) {
+                            status = false;
+                            break;
+                        }
+                    }
+                    if (status == true) {
+                        stack_pop(tempst, 1);
+                        if (tempst->size > 0 &&
+                            tempst->head->lexi->type == FUNCTION)
+                            queue_push(*retqueue, stack_pop(tempst, 0));
+                    }
+                }
+            }
+
+            // END OF SORT STATION
+
+            prevlex.chr = curlex.chr;
+            prevlex.num = curlex.num;
+            prevlex.type = curlex.type;
+        } else {
+            status = false;
+            printf("\n ERROR SORT STATION \n");
+            break;
         }
     }
+
     if (curlex.type != NUMBER && curlex.chr != ')') status = false;
-    while (tempst->size > 0)
-        if (origstr != NULL) free(origstr);
+    while (tempst->size > 0) queue_push(*retqueue, stack_pop(tempnam, 0));
+
+    // free struckts
+    if (origstr != NULL) free(origstr);
     stack_free(tempst);
     return status;
 }
@@ -161,7 +215,7 @@ bool str2polish(char* string, que** retqueue) {
 bool validate(lex curl, lex prevl) {
     bool retval = true;
     switch (prevl.type) {
-        case NUMBER:  // TODO: if '(' after numer ?
+        case NUMBER:
             if (curl.type != OPERATOR && curl.chr != ')') retval = false;
             break;
         case OPERATOR:
@@ -205,7 +259,7 @@ bool op_prior_cmp(char op1, char op2) {
 
     if (prOp1 <= prOp2) {
         retval = true;
-        if (op1 == '^') retval = false;  // right-accociative OPs
+        if (op1 == '^') retval = false;  // right-accociative operator
     }
     return retval;
 }
