@@ -3,15 +3,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-stack_t *stack_init() {
-    stack_t *ret;
-    ret = (stack_t *)calloc(1, sizeof(stack_t));
+mstack *stack_init() {
+    mstack *ret;
+    ret = (mstack *)calloc(1, sizeof(mstack));
     ret->head = NULL;
     ret->size = 0;
     return ret;
 }
 
-lex *stack_pop(stack_t *stack, int freeFlag) {
+lex *stack_pop(mstack *stack) {
     lex *retval = NULL;
     if (stack->size >= 1) {
         stack->size--;
@@ -29,12 +29,10 @@ lex *stack_pop(stack_t *stack, int freeFlag) {
     } else {
         retval = NULL;
     }
-
-    if (freeFlag) retval = NULL;
     return retval;
 }
 
-void stack_push(stack_t *stack, lex *new_value) {
+void stack_push(mstack *stack, lex *new_value) {
     stEl *new_stack_element = (stEl *)calloc(1, sizeof(stEl));
     new_stack_element->lexi = new_value;
     if (stack->size > 0) {
@@ -46,10 +44,10 @@ void stack_push(stack_t *stack, lex *new_value) {
 }
 
 // TODO: delete flag
-void stack_free(stack_t *stack) {
+void stack_free(mstack *stack) {
     if (stack != NULL) {
         while (stack->size > 0) {
-            lex *val2clean = stack_pop(stack, 0);
+            lex *val2clean = stack_pop(stack);
             free(val2clean);
         }
         free(stack);
@@ -58,9 +56,10 @@ void stack_free(stack_t *stack) {
 
 // LEXEMES UTILS
 
-bool stack_add_new_lex(stack_t *stack, lex new_value) {
+bool stack_add_new_lex(mstack *stack, lex new_value) {
     int ret = 0;
-    lex *new_lex = (lex *)calloc(1, sizeof(lex));
+    lex *new_lex;
+    new_lex = (lex *)calloc(1, sizeof(lex));
     if (new_lex != NULL) {
         new_lex->num = new_value.num;
         new_lex->type = new_value.type;
@@ -79,14 +78,14 @@ lex lex_init() {
     return new_lex;
 }
 
-void stack_print(stack_t *stack) {
+void stack_print(mstack *stack) {
     printf("!NEW STACK! printing ...\n");
     lex *stlx = stack->head->lexi;
     int len = stack->size;
 
     for (int i = 0; i < len; i++) {
         if (stlx != NULL && stack->size > 0) {
-            stlx = stack_pop(stack, 0);
+            stlx = stack_pop(stack);
             print_lexem(*stlx);
             free(stlx);
         }
@@ -95,28 +94,6 @@ void stack_print(stack_t *stack) {
 }
 
 void print_lexem(lex lex) {
-    printf("type: ");
-    switch (lex.type) {
-        case NUMBER:
-            printf("NUM");
-            break;
-        case OPERATOR:
-            printf("OP");
-            break;
-        case FUNCTION:
-            printf("FNC");
-            break;
-        case BRACKET:
-            printf("BR");
-            break;
-        case UNDEFINED:
-            printf("UND");
-            break;
-        default:
-            printf("N/A");
-            break;
-    }
-    fflush(stdout);
     if (lex.type != UNDEFINED)
-        printf(" chr:|%c| num:%5.3lf\n", lex.chr, lex.num);
+        printf("type:%d chr:|%c| num:%5.3lf\n", lex.type, lex.chr, lex.num);
 }

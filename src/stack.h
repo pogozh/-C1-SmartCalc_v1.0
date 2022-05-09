@@ -6,8 +6,6 @@
 #include <stdio.h>
 #include <sys/types.h>
 
-#include "errors.h"
-
 // STACK PART
 // lexem type for tokenize
 enum lexemeType { NUMBER, OPERATOR, FUNCTION, BRACKET, UNDEFINED };
@@ -29,18 +27,18 @@ struct stack_elements {
 typedef struct stacks {
     int size;
     stEl *head;
-} stack_t;
+} mstack;
 
-stack_t *stack_init();
-lex *stack_pop(stack_t *stack, int freeFlag);
-void stack_free(stack_t *stack);
-void stack_push(stack_t *stack, lex *new_value);
-bool stack_add_new_lex(stack_t *stack, lex new_value);
+mstack *stack_init();
+lex *stack_pop(mstack *stack);
+void stack_free(mstack *stack);
+void stack_push(mstack *stack, lex *new_value);
+bool stack_add_new_lex(mstack *stack, lex new_value);
 
 // stack utils
 lex lex_init();
 void print_lexem(lex lex);
-void stack_print(stack_t *stack);
+void stack_print(mstack *stack);
 
 // QUEUE PART !
 typedef struct queue_elements quEl;

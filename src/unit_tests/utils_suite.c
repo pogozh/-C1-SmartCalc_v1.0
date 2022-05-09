@@ -5,20 +5,20 @@
 #include "../calc.h"
 #include "../pars.h"
 
-START_TEST(stack_test01) {
+START_TEST(mstackest01) {
     // test stack 01
-    stack_t *sta = stack_init();
+    mstack *sta = stack_init();
     lex lex1 = lex_init();
     lex1.type = NUMBER;
 
     int i = 0;
     for (i = 1; i < 6; i++) {
-        lex1.num = (double)i;
+        lex1.num = (long double)i;
         stack_add_new_lex(sta, lex1);
     }
 
-    printf("\n STACK SIZE %d \n", sta->size);
-    stack_print(sta);
+    // printf("\n STACK SIZE %d \n", sta->size);
+    // stack_print(sta);
     stack_free(sta);
     ck_assert_int_eq(i, 6);
 }
@@ -31,12 +31,12 @@ START_TEST(queue_test01) {
 
     int i = 0;
     for (i = 1; i < 6; i++) {
-        lex1.num = (double)i;
+        lex1.num = (long double)i;
         queue_add_new_lex(qu, lex1);
     }
 
-    printf("\n STACK SIZE %d \n", qu->size);
-    queue_print(qu);
+    // printf("\n STACK SIZE %d \n", qu->size);
+    // queue_print(qu);
     queue_free(qu);
     ck_assert_int_eq(i, 6);
 }
@@ -210,33 +210,35 @@ END_TEST
 START_TEST(pars_num_test01) {
     char *str = "-333.4";
     int len;
-    double ret_num;
+    long double ret_num;
     char ret_chr;
     parse_num(str, &len, &ret_num, &ret_chr);
-    printf("len %.3lf = %d\n", ret_num, len);
+    // printf("len %.3lf = %d\n", ret_num, len);
     ck_assert_int_eq(len, 6);
 
     char *str1 = "23 x 333.4";
     parse_num(str1, &len, &ret_num, &ret_chr);
-    printf("len %.3lf = %d\n", ret_num, len);
+    // printf("len %.3lf = %d\n", ret_num, len);
     ck_assert_int_eq(len, 3);
 
     char *str2 = "x ";
     parse_num(str2, &len, &ret_num, &ret_chr);
-    printf("len %.3lf %c = %d \n", ret_num, ret_chr, len);
+    // printf("len %.3lf %c = %d \n", ret_num, ret_chr, len);
     ck_assert_int_eq(len, 1);
 
     // parse operators
     len = 0;
     char *str3 = "+-";
-    char op = parse_op(str3, &len);
-    printf("lenop %c = %d \n", op, len);
+    // char op =
+    parse_op(str3, &len);
+    // printf("lenop %c = %d \n", op, len);
     ck_assert_int_eq(len, 1);
 
     len = 0;
     char *str4 = "mode";
-    op = parse_op(str4, &len);
-    printf("lenop %c = %d \n", op, len);
+    // op =
+    parse_op(str4, &len);
+    // printf("lenop %c = %d \n", op, len);
     ck_assert_int_eq(len, 3);
 }
 END_TEST
@@ -248,53 +250,64 @@ START_TEST(pars_lexeme_test01) {
     lex lexret = lex_init();
 
     pars_lexeme(str, &lexret, &retlen, unary);
-    printf("len: %c = %d: ", lexret.chr, retlen);
-    print_lexem(lexret);
+    // printf("len: %c = %d: ", lexret.chr, retlen);
+    // print_lexem(lexret);
 
     char *str2 = "+34.567";
     pars_lexeme(str2, &lexret, &retlen, unary);
-    printf("len: %c = %d: ", lexret.chr, retlen);
-    print_lexem(lexret);
+    // printf("len: %c = %d: ", lexret.chr, retlen);
+    // print_lexem(lexret);
 
     char *str3 = "(1+1)";
     pars_lexeme(str3, &lexret, &retlen, unary);
-    printf("len: %c = %d: ", lexret.chr, retlen);
-    print_lexem(lexret);
+    // printf("len: %c = %d: ", lexret.chr, retlen);
+    // print_lexem(lexret);
 
     char *str4 = ")";
     pars_lexeme(str4, &lexret, &retlen, unary);
-    printf("len: %c = %d: ", lexret.chr, retlen);
-    print_lexem(lexret);
+    // printf("len: %c = %d: ", lexret.chr, retlen);
+    // print_lexem(lexret);
 
     char *str5 = "acos";
     pars_lexeme(str5, &lexret, &retlen, unary);
-    printf("len: %c = %d: ", lexret.chr, retlen);
-    print_lexem(lexret);
+    // printf("len: %c = %d: ", lexret.chr, retlen);
+    // print_lexem(lexret);
 
     char *str1 = "-3";
     pars_lexeme(str1, &lexret, &retlen, unary);
-    printf("len: %c = %d: ", lexret.chr, retlen);
-    print_lexem(lexret);
+    // printf("len: %c = %d: ", lexret.chr, retlen);
+    // print_lexem(lexret);
 
     ck_assert_int_eq(retlen, 2);
 }
 END_TEST
 
 START_TEST(str2que_test01) {
-    char *str = "1+1 ";
-    int retlen;
-    int unary = true;
-    lex lexret = lex_init();
-    //  pars_lexeme(str, &lexret, &retlen, unary);
-    printf("len: %c = %d: ", lexret.chr, retlen);
-    print_lexem(lexret);
+    int size;
+    char *expression = "-1+1+4^7mod3";
+    que *converted;
+    // que*
+    str_to_polish(expression, &converted);
 
-    char *str1 = "-3";
-    pars_lexeme(str1, &lexret, &retlen, unary);
-    printf("len: %c = %d: ", lexret.chr, retlen);
-    print_lexem(lexret);
+    // printf("str(%s ) to pilish que: \n", expression);
+    size = converted->size;
+    // queue_print(converted);
+    queue_free(converted);
+    ck_assert_int_eq(size, 9);
+}
+END_TEST
 
-    ck_assert_int_eq(retlen, 2);
+START_TEST(str2que_test02) {
+    int size;
+
+    que *res0;
+    char *str0 = "log(0.7)";
+    str_to_polish(str0, &res0);
+    // printf("str(%s ) to pilish que: \n", str0);
+    size = res0->size;
+    // queue_print(res0);
+    queue_free(res0);
+    ck_assert_int_eq(size, 2);
 }
 END_TEST
 
@@ -302,7 +315,7 @@ Suite *utils_suite(void) {
     Suite *suite = suite_create("utils suite");
     TCase *cases = tcase_create("utils case");
 
-    tcase_add_test(cases, stack_test01);
+    tcase_add_test(cases, mstackest01);
     tcase_add_test(cases, queue_test01);
     tcase_add_test(cases, prior_test01);
     tcase_add_test(cases, rm_sp_test01);
@@ -311,6 +324,7 @@ Suite *utils_suite(void) {
     tcase_add_test(cases, pars_num_test01);
     tcase_add_test(cases, pars_lexeme_test01);
     tcase_add_test(cases, str2que_test01);
+    tcase_add_test(cases, str2que_test02);
 
     tcase_set_timeout(cases, 999999);
     suite_add_tcase(suite, cases);

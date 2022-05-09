@@ -127,88 +127,89 @@ void parse_num(char* str, int* ret_len, double* ret_num, char* ret_chr) {
 }
 
 // POLISH NOTATION
-bool str_to_polish(char* string, que** retqueue) {
+bool str_to_polish(char* string, que** retque) {
     int status = true;
-    stack_t* tempst = stack_init();
-    *retqueue = queue_init();
-    char *str = NULL, *origstr = NULL;
+    mstack* stack = stack_init();
+    *retque = queue_init();
+    char* str = NULL;
+    char* origstr = NULL;
     if ((status = (string != NULL))) {
         int len = strlen(string);
         str = (char*)calloc(sizeof(char), len + 10);
         origstr = str;
         snprintf(str, len + 9, "%s", string);
         rm_spaces(str);
+        printf("\nstr1 = %s\n", str);
+        printf("strlen = %ld\n", strlen(str));
         if (strlen(str) <= 0) status = false;
+        printf("status %d\n", status);
     }
 
-    int unary = true;
-    lex prevlex, curlex;
+    bool unary = true;
+    lex prevlex;
     prevlex.type = UNDEFINED;
-    while (status && *str != '\0') {
-        int curlen = 0;
-        if (validate(curlex, prevlex) &&
-            pars_lexeme(str, &curlex, &curlen, unary)) {
+    lex curlex;
+
+    // SORT STATION START
+    while (*str != '\0' && status) {
+        int currWid;
+        if (pars_lexeme(str, &curlex, &currWid, unary) &&
+            validate(curlex, prevlex)) {
             unary = (curlex.type == OPERATOR || curlex.chr == '(');
-            str += curlen;
-
-            // SORT STATION START
-
+            str += currWid;
             // 1. if current char is number -> add lexeme to output queue
-            if (curlex.type == NUMBER) queue_add_new_lex(*retqueue, curlex);
+            if (curlex.type == NUMBER) queue_add_new_lex(*retque, curlex);
             // 2. if current char is function -> add lexeme to stack
             if (curlex.type == FUNCTION || curlex.chr == '(')
-                stack_add_new_lex(tempst, curlex);
+                stack_add_new_lex(stack, curlex);
             // 3. if current char is operator
             if (curlex.type == OPERATOR) {
-                while (tempst->size > 0 &&
-                       op_prior_cmp(curlex.chr, tempst->head->lexi->chr) &&
-                       (tempst->head->lexi->type == FUNCTION ||
-                        tempst->head->lexi->type == OPERATOR))
-                    queue_push(*retqueue, stack_pop(tempst, 0));
+                while (stack->size > 0 &&
+                       (stack->head->lexi->type == OPERATOR ||
+                        stack->head->lexi->type == FUNCTION) &&
+                       (op_prior_cmp(curlex.chr, stack->head->lexi->chr)))
+                    queue_push(*retque, stack_pop(stack));
 
-                stack_add_new_lex(tempst, curlex);
+                stack_add_new_lex(stack, curlex);
             }
-            // 4. if current cher = )
+            // 4. if current cher is clesed bracket -> find a pair in stack
             if (curlex.chr == ')') {
-                if (tempst->size <= 0) {
+                if (stack->size <= 0) {
                     status = false;
                     break;
                 } else {
-                    // put from stack to queue untill find '(' in stack
-                    while (tempst->head->lexi->chr != '(') {
-                        queue_push(*retqueue, stack_pop(tempst, 0));
-                        if (tempst->size <= 0) {
+                    while (stack->head->lexi->chr != '(') {
+                        queue_push(*retque, stack_pop(stack));
+                        if (stack->size <= 0) {
                             status = false;
                             break;
                         }
                     }
-                    if (status == true) {
-                        stack_pop(tempst, 1);
-                        if (tempst->size > 0 &&
-                            tempst->head->lexi->type == FUNCTION)
-                            queue_push(*retqueue, stack_pop(tempst, 0));
+                    if (status) {
+                        free(stack_pop(stack));
+                        if (stack->size > 0 &&
+                            stack->head->lexi->type == FUNCTION)
+                            queue_push(*retque, stack_pop(stack));
                     }
                 }
             }
 
-            // END OF SORT STATION
-
+            prevlex.type = curlex.type;
             prevlex.chr = curlex.chr;
             prevlex.num = curlex.num;
-            prevlex.type = curlex.type;
         } else {
+            printf("\n!SORT STATION ERROR!\n");
             status = false;
-            printf("\n ERROR SORT STATION \n");
             break;
         }
     }
+    if (!(curlex.type == NUMBER || curlex.chr == ')')) status = false;
+    while (stack->size > 0) queue_push(*retque, stack_pop(stack));
+    // END OF SORT STATION
 
-    if (curlex.type != NUMBER && curlex.chr != ')') status = false;
-    while (tempst->size > 0) queue_push(*retqueue, stack_pop(tempnam, 0));
-
-    // free struckts
     if (origstr != NULL) free(origstr);
-    stack_free(tempst);
+
+    stack_free(stack);
     return status;
 }
 
@@ -240,6 +241,7 @@ bool validate(lex curl, lex prevl) {
         default:
             break;
     }
+    // printf("\n validate %d \n", retval);
     return retval;
 }
 

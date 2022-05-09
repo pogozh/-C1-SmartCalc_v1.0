@@ -1,7 +1,8 @@
 CC = gcc
 target = s21_calc
 
-MATH_LIB = -lm
+MATH_LIB = -lm -lgtk-3 -lgdk-3 -lpangocairo-1.0 -lpango-1.0 -lharfbuzz\
+ -latk-1.0 -lcairo-gobject -lcairo -lgdk_pixbuf-2.0 -lgio-2.0 -lgobject-2.0 -lglib-2.0 -rdynamic
 CHECK_LIB = -pthread -lcheck_pic -pthread -lrt -lm -lsubunit
 EXTRA_WARNING = -Wall -Wextra
 DEBUG_FLAG = -g3 -fsanitize=address
@@ -9,7 +10,13 @@ COVERAGE_FLAG = -fprofile-arcs -ftest-coverage # -g
 
 
 # FOLDERS
-INCLUDE_PATH = -I. -I./unit_tests
+INCLUDE_PATH = -I. -I./unit_tests -pthread -I/usr/include/gtk-3.0 -I/usr/include/at-spi2-atk/2.0\
+ -I/usr/include/at-spi-2.0 -I/usr/include/dbus-1.0 -I/usr/lib/x86_64-linux-gnu/dbus-1.0/include\
+  -I/usr/include/gtk-3.0 -I/usr/include/gio-unix-2.0 -I/usr/include/cairo -I/usr/include/pango-1.0\
+   -I/usr/include/fribidi -I/usr/include/harfbuzz -I/usr/include/atk-1.0 -I/usr/include/cairo\
+    -I/usr/include/pixman-1 -I/usr/include/uuid -I/usr/include/freetype2 -I/usr/include/libpng16\
+    -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/libmount -I/usr/include/blkid -I/usr/include/glib-2.0\
+    -I/usr/lib/x86_64-linux-gnu/glib-2.0/include
 BUILD_DIR = ./build
 calc_DIR = ./
 TEST_DIR = ./unit_tests
@@ -19,10 +26,12 @@ TEST_OBJ_DIR = $(BUILD_DIR)/test
 
 # CREATE CALC FILES
 calc_SOURCE =\
-    stack.c\
+	stack.c\
 	stack_queue.c\
-    calc.c\
-    pars.c\
+	pars.c\
+	calc.c\
+	main.c\
+	callbacks.c\
 
 calc_OBJ = $(calc_SOURCE:%.c=%.o)
 calc_OBJ_PATH = $(addprefix $(calc_OBJ_DIR)/, $(calc_OBJ))
@@ -46,17 +55,16 @@ TEST_OBJ_PATH = $(addprefix $(TEST_OBJ_DIR)/, $(TEST_OBJ))
 TEST_DEP_PATH = $(TEST_OBJ_PATH:%.o=%.d)
 -include $(calc_DEP_PATH)
 
-
+#all, install, uninstall,clean, dvi, dist, tests, gcov_report.
 # ALL TARGET
-all: s21_calc.a tests
+all: s21_calc tests
 
 # S21_CALC.A BUILD
 $(calc_OBJ_DIR)/%.o: $(calc_DIR)/%.c
 	$(CC) $(INCLUDE_PATH) $(MATH_LIB) $(DEBUG_FLAG) $(EXTRA_WARNING) -MD -c $< -o $@
 
-s21_calc.a: $(calc_OBJ_PATH)
-	ar rcs $@ $^
-	ranlib $@
+s21_calc: $(calc_OBJ_PATH)
+	$(CC) -o $@ $(INCLUDE_PATH) $(MATH_LIB) $(CHECK_LIB) $(EXTRA_WARNING) $(DEBUG_FLAG) $^
 
 # S21_TEST.OUT BUILD
 $(TEST_OBJ_DIR)/%.o: $(TEST_DIR)/%.c
@@ -81,15 +89,13 @@ tests: test.out
 
 # CLEAN TARGET
 clean:
-	# rm ./gcov_report/*.*
-	# rm ./gcov_report/src/*.*
 	find . -type f -name "*.o" -delete
 	find . -type f -name "*.d" -delete
 	find . -type f -name "*.a" -delete
 	find . -name "*.out" -delete
 	find . -name "*.gcno" -delete
 	find . -name "*.gcda" -delete
-	rm -rf /gcov_report/*.*
+	rm -rf ./gcov_report
 	rm -rf report
 	rm -rf gcovreport.info
 	rm -rf gcovreport
