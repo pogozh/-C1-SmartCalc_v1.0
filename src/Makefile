@@ -126,6 +126,7 @@ clean:
 	rm -rf dist/
 	rm -rf calc_dist
 	rm -rf calc_dist.tgz
+	rm -rf s21_calc
 
 #RUN CPP CHECK
 cppcheck:
