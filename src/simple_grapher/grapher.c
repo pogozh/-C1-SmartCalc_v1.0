@@ -196,7 +196,7 @@ void draw_axes(cairo_t *cr, packed_data_t *data) {
     cairo_text_extents(cr, "y", &extents);
     cairo_move_to(cr, data->box_left + extents.height * 0.8, data->box_top);
     cairo_save(cr);
-    cairo_rotate(cr, -PI / 2);
+    // cairo_rotate(cr, -PI / 2);
     cairo_show_text(cr, "y");
     cairo_restore(cr);
     cairo_stroke(cr);
