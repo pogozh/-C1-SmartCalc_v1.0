@@ -125,6 +125,7 @@ clean:
 	rm -rf .././install/
 	rm -rf dist/
 	rm -rf calc_dist
+	rm -rf calc_dist.tgz
 
 #RUN CPP CHECK
 cppcheck:
