@@ -1,4 +1,4 @@
-CC = gcc
+CC = gcc -std=c11
 target = s21_calc
 
 MATH_LIB = -lm -lgtk-3 -lgdk-3 -lpangocairo-1.0 -lpango-1.0 -lharfbuzz\
@@ -62,6 +62,7 @@ all: clean s21_calc tests
 
 install: clean s21_calc
 	mkdir ../install/
+	cp -r UI/ ./../install/UI
 	cp s21_calc ./../install
 
 uninstall:
@@ -70,9 +71,9 @@ uninstall:
 dist: clean
 	mkdir dist/
 	cp -r docs/ dist/docs
-	cp -r simple_grapher/ docs/simple_grapher
+	cp -r simple_grapher/ dist/simple_grapher
 	cp -r build/ dist/build
-	cp -r UI/ dist/UIm
+	cp -r UI/ dist/UI
 	cp -r unit_tests/ dist/unit_tests
 	cp Makefile dist/Makefile
 	cp *.c dist/
@@ -135,8 +136,8 @@ clean:
 	@rm -rf calc_dist
 	@rm -rf calc_dist.tgz
 	@rm -rf s21_calc
-	rm -rf simple_grapher/ 
-	rm -rfdocs/simple_grapher
+	rm -rf dist/simple_grapher
+	rm -f docs/text.aux docs/text.pdf docs/text.dvi docs/text.log docs/text.toc
 
 #RUN CPP CHECK
 cppcheck:
@@ -147,11 +148,9 @@ CPPLINT.cfg:
 	cp ../materials/linters/CPPLINT.cfg .
 
 check: CPPLINT.cfg
-	python3 ../materials/linters/cpplint.py *.c
-	python3 ../materials/linters/cpplint.py *.h
-	python3 ../materials/linters/cpplint.py ./unit_tests/*.c
-	python3 ../materials/linters/cpplint.py ./unit_tests/*.h
-	rm -rf CPPLINT.cfg
+	find . -name "*.c" -exec python3 ../materials/linters/cpplint.py {} \;
+	find . -name "*.h" -exec python3 ../materials/linters/cpplint.py {} \;
+	rm -f CPPLINT.cfg
 
 # PHONY TARGET
 PHONY:  clear check test all install uninstall clean dvi dist tests gcov_report prog fsan fval linter

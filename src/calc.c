@@ -68,7 +68,10 @@ double calc_nums(double num1, double num2, char op) {
             break;
 
         case '/':
-            retval = num2 / num1;
+            if (fabs(num1) > __FLT_EPSILON__)
+                retval = num2 / num1;
+            else
+                retval = NAN;
             break;
         case '^':
             retval = pow(num2, num1);

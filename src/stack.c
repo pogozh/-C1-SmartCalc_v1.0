@@ -43,7 +43,6 @@ void stack_push(mstack *stack, lex *new_value) {
     stack->size++;
 }
 
-// TODO: delete flag
 void stack_free(mstack *stack) {
     if (stack != NULL) {
         while (stack->size > 0) {

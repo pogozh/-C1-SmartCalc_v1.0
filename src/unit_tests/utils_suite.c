@@ -13,7 +13,7 @@ START_TEST(mstackest01) {
 
     int i = 0;
     for (i = 1; i < 6; i++) {
-        lex1.num = (long double)i;
+        lex1.num = (double)i;
         stack_add_new_lex(sta, lex1);
     }
 
@@ -31,7 +31,7 @@ START_TEST(queue_test01) {
 
     int i = 0;
     for (i = 1; i < 6; i++) {
-        lex1.num = (long double)i;
+        lex1.num = (double)i;
         queue_add_new_lex(qu, lex1);
     }
 
@@ -148,8 +148,8 @@ START_TEST(valid_test01) {
 END_TEST
 
 START_TEST(rm_sp_test01) {
-    char op1[] = "de1ete 8*\%space s ";
-    char op2[] = "de1ete8*\%spaces";
+    char op1[] = "de1ete 8*%%space s ";
+    char op2[] = "de1ete8*%%spaces";
     // printf("%s \n", op1);
     rm_spaces(op1);
     // printf("%s \n", op1);

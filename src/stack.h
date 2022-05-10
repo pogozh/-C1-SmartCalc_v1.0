@@ -62,4 +62,4 @@ bool queue_add_new_lex(que *queue, lex new_value);
 // void stack_print(mstack *stack);
 // void queue_print(que *queue);
 
-#endif /* SRC_STACK_H_ */
+#endif  // SRC_STACK_H_

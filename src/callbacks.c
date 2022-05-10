@@ -59,7 +59,7 @@ void oncalculate(GtkButton* button, gpointer gtk_window) {
         gtk_editable_set_position(
             GTK_EDITABLE(entry),
             gtk_editable_get_position(GTK_EDITABLE(entry)) + 50);
-    };
+    }
     UNUSED(button);
 }
 
