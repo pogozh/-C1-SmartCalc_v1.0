@@ -25,7 +25,7 @@ static inline GtkWidget* find_child(GtkWidget* parent, const gchar* name) {
 void oncalculate(GtkButton* button, gpointer gtk_window) {
     GtkEntry* entry = find_child(gtk_window, "entry_exp");
     gchar input[256];
-    g_print("%s", gtk_entry_get_text(entry));
+    g_print("%s\n", gtk_entry_get_text(entry));
     g_snprintf(input, sizeof(input), "%s", gtk_entry_get_text(entry));
     que* qu;
     GtkEntry* entry_x = find_child(gtk_window, "entry_x");
@@ -38,7 +38,10 @@ void oncalculate(GtkButton* button, gpointer gtk_window) {
         g_snprintf(expression, sizeof(expression), "%.9f", result);
         gtk_entry_buffer_set_text(gtk_entry_get_buffer(entry), expression,
                                   strlen(expression));
-        g_print("%.8f\n", result);
+        g_print("%.9f\n", result);
+        gtk_editable_set_position(
+            GTK_EDITABLE(entry),
+            gtk_editable_get_position(GTK_EDITABLE(entry)) + 50);
     };
     UNUSED(button);
 }
@@ -302,4 +305,18 @@ void onmul(GtkButton* b, gpointer io_field) {
     gtk_editable_set_position(
         GTK_EDITABLE(io_field),
         gtk_editable_get_position(GTK_EDITABLE(io_field)) + 1);
+}
+
+void oncls(GtkButton* b, gpointer io_field) {
+    UNUSED(b);
+    gtk_editable_delete_text(GTK_EDITABLE(io_field), 0,
+                             gtk_entry_get_max_length(GTK_ENTRY(io_field)));
+}
+
+void ondel(GtkButton* b, gpointer io_field) {
+    UNUSED(b);
+    gtk_editable_delete_text(
+        GTK_EDITABLE(io_field),
+        gtk_editable_get_position(GTK_EDITABLE(io_field)) - 1,
+        gtk_editable_get_position(GTK_EDITABLE(io_field)));
 }

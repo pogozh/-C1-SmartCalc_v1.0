@@ -37,8 +37,6 @@ bool stack_add_new_lex(mstack *stack, lex new_value);
 
 // stack utils
 lex lex_init();
-void print_lexem(lex lex);
-void stack_print(mstack *stack);
 
 // QUEUE PART !
 typedef struct queue_elements quEl;
@@ -58,5 +56,10 @@ lex *queue_pop(que *queue);
 void queue_push(que *queue, lex *new_value);
 void queue_free(que *queue);
 bool queue_add_new_lex(que *queue, lex new_value);
-void queue_print(que *queue);
+
+// DEBUG FUCTIONS - COMMENTS FOR BETTER COVERAGE
+// void print_lexem(lex lex);
+// void stack_print(mstack *stack);
+// void queue_print(que *queue);
+
 #endif /* SRC_STACK_H_ */

@@ -78,22 +78,23 @@ bool queue_add_new_lex(que *queue, lex new_value) {
     return ret;
 }
 
-void queue_print(que *queue) {
-    printf("!NEW QUEUE! printing ...\n");
-    lex *stlx;
-    int len = 0;
-    if (queue->tail != NULL) {
-        stlx = queue->tail->lexi;
-        len = queue->size;
-    } else {
-        printf("\n queue->tail = NULL \n");
-    }
-    for (int i = 0; i < len; i++) {
-        if (stlx != NULL && queue->size > 0) {
-            stlx = queue_pop(queue);
-            print_lexem(*stlx);
-            free(stlx);
-        }
-    }
-    printf("\n");
-}
+// DEBUG FUCTIONS - COMMENTS FOR BETTER COVERAGE
+// void queue_print(que *queue) {
+//     printf("!NEW QUEUE! printing ...\n");
+//     lex *stlx;
+//     int len = 0;
+//     if (queue->tail != NULL) {
+//         stlx = queue->tail->lexi;
+//         len = queue->size;
+//     } else {
+//         printf("\n queue->tail = NULL \n");
+//     }
+//     for (int i = 0; i < len; i++) {
+//         if (stlx != NULL && queue->size > 0) {
+//             stlx = queue_pop(queue);
+//             print_lexem(*stlx);
+//             free(stlx);
+//         }
+//     }
+//     printf("\n");
+// }

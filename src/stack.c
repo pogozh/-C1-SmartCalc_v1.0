@@ -78,22 +78,23 @@ lex lex_init() {
     return new_lex;
 }
 
-void stack_print(mstack *stack) {
-    printf("!NEW STACK! printing ...\n");
-    lex *stlx = stack->head->lexi;
-    int len = stack->size;
+// DEBUG FUCTIONS - COMMENTS FOR BETTER COVERAGE
+// void stack_print(mstack *stack) {
+//     printf("!NEW STACK! printing ...\n");
+//     lex *stlx = stack->head->lexi;
+//     int len = stack->size;
 
-    for (int i = 0; i < len; i++) {
-        if (stlx != NULL && stack->size > 0) {
-            stlx = stack_pop(stack);
-            print_lexem(*stlx);
-            free(stlx);
-        }
-    }
-    printf("\n");
-}
+//     for (int i = 0; i < len; i++) {
+//         if (stlx != NULL && stack->size > 0) {
+//             stlx = stack_pop(stack);
+//             print_lexem(*stlx);
+//             free(stlx);
+//         }
+//     }
+//     printf("\n");
+// }
 
-void print_lexem(lex lex) {
-    if (lex.type != UNDEFINED)
-        printf("type:%d chr:|%c| num:%5.3lf\n", lex.type, lex.chr, lex.num);
-}
+// void print_lexem(lex lex) {
+//     if (lex.type != UNDEFINED)
+//         printf("type:%d chr:|%c| num:%5.3lf\n", lex.type, lex.chr, lex.num);
+// }

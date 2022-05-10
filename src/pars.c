@@ -139,10 +139,10 @@ bool str_to_polish(char* string, que** retque) {
         origstr = str;
         snprintf(str, len + 9, "%s", string);
         rm_spaces(str);
-        printf("\nstr1 = %s\n", str);
-        printf("strlen = %ld\n", strlen(str));
+        // printf("\nexp: = %s\n", str);
+        // printf("strlen = %ld\n", strlen(str));
         if (strlen(str) <= 0) status = false;
-        printf("status %d\n", status);
+        // printf("status %d\n", status);
     }
 
     bool unary = true;

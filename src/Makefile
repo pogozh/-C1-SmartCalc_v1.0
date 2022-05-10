@@ -55,9 +55,31 @@ TEST_OBJ_PATH = $(addprefix $(TEST_OBJ_DIR)/, $(TEST_OBJ))
 TEST_DEP_PATH = $(TEST_OBJ_PATH:%.o=%.d)
 -include $(calc_DEP_PATH)
 
-#all, install, uninstall,clean, dvi, dist, tests, gcov_report.
-# ALL TARGET
+ 
+# ALL TARGET : all, tests, gcov_report, install, uninstall,clean, dvi, dist,
 all: s21_calc tests
+	./s21_calc
+
+install: clean s21_calc
+	mkdir ../install/
+	cp s21_calc ./../install
+
+uninstall:
+	rm -rf .././install/
+
+dist: clean
+	mkdir dist/
+	cp -r build/ dist/build
+	cp -r UI/ dist/UIm
+	cp -r unit_tests/ dist/unit_tests
+	cp Makefile dist/Makefile
+	cp *.c dist/
+	cp *.h dist/
+	tar cvzf calc_dist.tgz dist/
+	rm -rf dist/
+
+dvi:
+	latex -output-directory=./docs ./docs/main.tex
 
 # S21_CALC.A BUILD
 $(calc_OBJ_DIR)/%.o: $(calc_DIR)/%.c
@@ -100,6 +122,9 @@ clean:
 	rm -rf gcovreport.info
 	rm -rf gcovreport
 	rm -rf CPPLINT.cfg
+	rm -rf .././install/
+	rm -rf dist/
+	rm -rf calc_dist
 
 #RUN CPP CHECK
 cppcheck:
@@ -116,9 +141,8 @@ check: CPPLINT.cfg
 	python3 ../materials/linters/cpplint.py ./unit_tests/*.h
 	rm -rf CPPLINT.cfg
 
-
 # PHONY TARGET
-PHONY: clean check test
+PHONY:  clear check test all install uninstall clean dvi dist tests gcov_report prog fsan fval linter
 
 
 # PERSONAL TARGETS SHOULD BE WRITTEN BELLOW, FOUND TARGETS ABOVE WILL BE DELETED

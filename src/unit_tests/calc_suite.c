@@ -36,7 +36,7 @@ END_TEST
 
 START_TEST(calc_test2) {
     char str[] =
-        "asin(x+45)+acos(x)/"
+        "asin(x+45)+cos(x)/"
         "tan(x)-acos(x-0.122)*asin(x)-atan(x)-sqrt(4)+ln(x)+log(x)+ ln(123^x)";
     double x = 0.170001;
     double expected = asin(x + 45) + acos(x) / tan(x) -
@@ -61,8 +61,8 @@ START_TEST(calc_test3) {
     que *converted;
     if (str_to_polish(str, &converted)) {
         double result = calculate(converted, x);
-        printf("res = %.9f\n", result);
-        printf("exp = %.9f\n", expected);
+        // printf("res = %.9f\n", result);
+        // printf("exp = %.9f\n", expected);
         ck_assert_msg(nums_cmp(result, expected), "exp: %f\nres: %f", expected,
                       result);
     } else {
