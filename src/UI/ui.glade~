@@ -24,6 +24,7 @@
                 <property name="label" translatable="yes">Plote</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
+                <property name="focus_on_click">False</property>
                 <property name="receives_default">True</property>
                 <signal name="clicked" handler="onPlote" object="gtk_window" swapped="no"/>
               </object>
@@ -38,7 +39,9 @@
                 <property name="label" translatable="yes">Credit</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
+                <property name="focus_on_click">False</property>
                 <property name="receives_default">True</property>
+                <signal name="clicked" handler="onCredit" object="gtk_window" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">True</property>

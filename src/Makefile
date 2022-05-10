@@ -4,8 +4,8 @@ target = s21_calc
 MATH_LIB = -lm -lgtk-3 -lgdk-3 -lpangocairo-1.0 -lpango-1.0 -lharfbuzz\
  -latk-1.0 -lcairo-gobject -lcairo -lgdk_pixbuf-2.0 -lgio-2.0 -lgobject-2.0 -lglib-2.0 -rdynamic
 CHECK_LIB = -pthread -lcheck_pic -pthread -lrt -lm -lsubunit
-EXTRA_WARNING = -Wall -Wextra
-DEBUG_FLAG = -g3 -fsanitize=address
+EXTRA_WARNING = #-Wall -Wextra
+# DEBUG_FLAG = -g #-fsanitize=address
 COVERAGE_FLAG = -fprofile-arcs -ftest-coverage # -g
 
 
@@ -50,14 +50,14 @@ TEST_SOURCE =\
 	utils_suite.c\
 	calc_suite.c\
 
-TEST_OBJ = $(TEST_SOURCE:%.c=%.o) $(calc_SOURCE:%.c=%.o)
+TEST_OBJ = $(TEST_SOURCE:%.c=%.o) stack.o stack_queue.o pars.o calc.o
 TEST_OBJ_PATH = $(addprefix $(TEST_OBJ_DIR)/, $(TEST_OBJ))
 TEST_DEP_PATH = $(TEST_OBJ_PATH:%.o=%.d)
 -include $(calc_DEP_PATH)
 
  
 # ALL TARGET : all, tests, gcov_report, install, uninstall,clean, dvi, dist,
-all: s21_calc tests
+all: clean s21_calc tests
 	./s21_calc
 
 install: clean s21_calc
@@ -69,6 +69,8 @@ uninstall:
 
 dist: clean
 	mkdir dist/
+	cp -r docs/ dist/docs
+	cp -r simple_grapher/ docs/simple_grapher
 	cp -r build/ dist/build
 	cp -r UI/ dist/UIm
 	cp -r unit_tests/ dist/unit_tests
@@ -79,27 +81,33 @@ dist: clean
 	rm -rf dist/
 
 dvi:
-	latex -output-directory=./docs ./docs/main.tex
+	latex -output-directory=./docs ./docs/text.tex ./docs/brief.dvi
+	latex -output-directory=./docs ./docs/text.tex ./docs/brief.dvi
+	pdflatex -output-directory=./docs ./docs/text.tex ./docs/brief.pdf
 
-# S21_CALC.A BUILD
+# S21_CALC BUILD
 $(calc_OBJ_DIR)/%.o: $(calc_DIR)/%.c
-	$(CC) $(INCLUDE_PATH) $(MATH_LIB) $(DEBUG_FLAG) $(EXTRA_WARNING) -MD -c $< -o $@
+	@$(CC) $(INCLUDE_PATH) $(MATH_LIB) $(DEBUG_FLAG) $(EXTRA_WARNING) -MD -c $< -o $@
 
-s21_calc: $(calc_OBJ_PATH)
-	$(CC) -o $@ $(INCLUDE_PATH) $(MATH_LIB) $(CHECK_LIB) $(EXTRA_WARNING) $(DEBUG_FLAG) $^
+$(BUILD_DIR)/libgrapher.a:
+	make -C ./simple_grapher libgrapher.a
+	cp simple_grapher/libgrapher.a $(BUILD_DIR)
+
+s21_calc: $(calc_OBJ_PATH) $(BUILD_DIR)/libgrapher.a
+	@$(CC) -o $@ $(INCLUDE_PATH) $(CHECK_LIB) $(EXTRA_WARNING) $(DEBUG_FLAG) $^ $(MATH_LIB)
 
 # S21_TEST.OUT BUILD
 $(TEST_OBJ_DIR)/%.o: $(TEST_DIR)/%.c
-	$(CC) $(INCLUDE_PATH) $(MATH_LIB) $(CHECK_LIB) $(EXTRA_WARNING) $(DEBUG_FLAG) -MD -c $< -o $@
+	@$(CC) $(INCLUDE_PATH) $(MATH_LIB) $(CHECK_LIB) $(EXTRA_WARNING) $(DEBUG_FLAG) -MD -c $< -o $@
 
 $(TEST_OBJ_DIR)/%.o: %.c
-	$(CC) $(COVERAGE_FLAG) $(INCLUDE_PATH) $(MATH_LIB) $(CHECK_LIB) $(EXTRA_WARNING) $(DEBUG_FLAG) -MD -c $< -o $@
+	@$(CC) $(COVERAGE_FLAG) $(INCLUDE_PATH) $(MATH_LIB) $(CHECK_LIB) $(EXTRA_WARNING) $(DEBUG_FLAG) -MD -c $< -o $@
 
 test.out: $(TEST_OBJ_PATH)
-	$(CC) $^ $(COVERAGE_FLAG) $(INCLUDE_PATH) $(MATH_LIB) $(CHECK_LIB) $(EXTRA_WARNING) $(DEBUG_FLAG) -o $@
+	@$(CC) $^ $(COVERAGE_FLAG) $(INCLUDE_PATH) $(MATH_LIB) $(CHECK_LIB) $(EXTRA_WARNING) $(DEBUG_FLAG) -o $@
 
 # TESTS COVERAGE
-gcov_report: test.out
+gcov_report: test.out	
 	./$<
 	lcov -t "$<" -o gcovreport.info -c -d $(TEST_OBJ_DIR)
 	genhtml -o $@ gcovreport.info
@@ -111,22 +119,24 @@ tests: test.out
 
 # CLEAN TARGET
 clean:
-	find . -type f -name "*.o" -delete
-	find . -type f -name "*.d" -delete
-	find . -type f -name "*.a" -delete
-	find . -name "*.out" -delete
-	find . -name "*.gcno" -delete
-	find . -name "*.gcda" -delete
-	rm -rf ./gcov_report
-	rm -rf report
-	rm -rf gcovreport.info
-	rm -rf gcovreport
-	rm -rf CPPLINT.cfg
-	rm -rf .././install/
-	rm -rf dist/
-	rm -rf calc_dist
-	rm -rf calc_dist.tgz
-	rm -rf s21_calc
+	@find . -type f -name "*.o" -delete
+	@find . -type f -name "*.d" -delete
+	@find . -type f -name "*.a" -delete
+	@find . -name "*.out" -delete
+	@find . -name "*.gcno" -delete
+	@find . -name "*.gcda" -delete
+	@rm -rf ./gcov_report
+	@rm -rf report
+	@rm -rf gcovreport.info
+	@rm -rf gcovreport
+	@rm -rf CPPLINT.cfg
+	@rm -rf .././install/
+	@rm -rf dist/
+	@rm -rf calc_dist
+	@rm -rf calc_dist.tgz
+	@rm -rf s21_calc
+	rm -rf simple_grapher/ 
+	rm -rfdocs/simple_grapher
 
 #RUN CPP CHECK
 cppcheck:

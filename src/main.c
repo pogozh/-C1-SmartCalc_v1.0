@@ -1,10 +1,20 @@
 #include <gtk/gtk.h>
 
+#include "simple_grapher/grapher.h"
+
+double *x;
+double *y;
+int count_of_dots = 500000;
+
 int main(int argc, char *argv[]) {
     GtkBuilder *builder;
     GtkWindow *window;
 
+    x = calloc(sizeof(double), count_of_dots);
+    y = calloc(sizeof(double), count_of_dots);
+
     gtk_init(&argc, &argv);
+    plotter_init();
 
     builder = gtk_builder_new_from_file("./UI/ui.glade");
 
@@ -16,5 +26,8 @@ int main(int argc, char *argv[]) {
 
     gtk_widget_show_all(GTK_WIDGET(window));
     gtk_main();
+
+    free(x);
+    free(y);
     return 0;
 }

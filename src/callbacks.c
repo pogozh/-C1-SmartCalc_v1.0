@@ -1,7 +1,10 @@
 #include <gtk/gtk.h>
+#include <locale.h>
 
 #include "calc.h"
 #include "pars.h"
+#include "simple_grapher/grapher.h"
+
 #define UNUSED(expr) (void)(expr)
 
 static inline GtkWidget* find_child(GtkWidget* parent, const gchar* name) {
@@ -22,13 +25,27 @@ static inline GtkWidget* find_child(GtkWidget* parent, const gchar* name) {
     return NULL;
 }
 
+void to_locale_decimal_point(char* string) {
+    char cur_delim = ',';
+    char new_delim = '.';
+    if (*localeconv()->decimal_point == ',') {
+        cur_delim = '.';
+        new_delim = ',';
+    }
+    for (size_t i = 0; i < strlen(string); ++i) {
+        if (string[i] == cur_delim) {
+            string[i] = new_delim;
+        }
+    }
+}
+
 void oncalculate(GtkButton* button, gpointer gtk_window) {
-    GtkEntry* entry = find_child(gtk_window, "entry_exp");
+    GtkEntry* entry = GTK_ENTRY(find_child(gtk_window, "entry_exp"));
     gchar input[256];
     g_print("%s\n", gtk_entry_get_text(entry));
     g_snprintf(input, sizeof(input), "%s", gtk_entry_get_text(entry));
     que* qu;
-    GtkEntry* entry_x = find_child(gtk_window, "entry_x");
+    GtkEntry* entry_x = GTK_ENTRY(find_child(gtk_window, "entry_x"));
     gchar input_x[101];
     g_snprintf(input_x, sizeof(input), "%s", gtk_entry_get_text(entry_x));
     double input_x_d = strtod(input_x, NULL);
@@ -44,6 +61,34 @@ void oncalculate(GtkButton* button, gpointer gtk_window) {
             gtk_editable_get_position(GTK_EDITABLE(entry)) + 50);
     };
     UNUSED(button);
+}
+
+void on_plote_window_close(GtkWidget* widget, gpointer main_window) {
+    UNUSED(widget);
+    gtk_widget_set_sensitive(GTK_WIDGET(main_window), TRUE);
+}
+
+void onPlote(GtkButton* b, gpointer main_window) {
+    UNUSED(b);
+    /* builder init */
+    GtkBuilder* builder;
+    GtkWindow* window;
+
+    builder = gtk_builder_new_from_file("./UI/plotter.glade");
+
+    /* get window object from the builder */
+    window = GTK_WINDOW(gtk_builder_get_object(builder, "id@gtk_window"));
+
+    /* enable all signals from builder */
+    gtk_builder_connect_signals(builder, NULL);
+
+    /* disable main window */
+    gtk_widget_set_sensitive(GTK_WIDGET(main_window), FALSE);
+    g_signal_connect(G_OBJECT(window), "destroy",
+                     G_CALLBACK(on_plote_window_close), main_window);
+
+    /* show window */
+    gtk_widget_show_all(GTK_WIDGET(window));
 }
 
 void onsqrt(GtkButton* b, gpointer io_field) {
@@ -319,4 +364,86 @@ void ondel(GtkButton* b, gpointer io_field) {
         GTK_EDITABLE(io_field),
         gtk_editable_get_position(GTK_EDITABLE(io_field)) - 1,
         gtk_editable_get_position(GTK_EDITABLE(io_field)));
+}
+
+extern double* x;
+extern double* y;
+extern int count_of_dots;
+
+void on_plotter_window_close(GtkWidget* widget, gpointer main_window) {
+    UNUSED(widget);
+    gtk_widget_set_sensitive(GTK_WIDGET(main_window), TRUE);
+    gtk_widget_show(main_window);
+}
+
+void on_plote_graph(GtkButton* b, GtkGrid* plotter_window) {
+    UNUSED(b);
+    double x_max;
+    double x_min;
+    double y_max;
+    double y_min;
+    char* endptr;
+    GtkWidget* widget;
+    char str[256];
+
+    widget = find_child(GTK_WIDGET(plotter_window), "id@gtk_xmin");
+    g_snprintf(str, sizeof(str), "%s", gtk_entry_get_text(GTK_ENTRY(widget)));
+    to_locale_decimal_point(str);
+    x_min = strtod(str, &endptr);
+    if (endptr == str || *endptr != '\0') {
+        gtk_entry_set_text(GTK_ENTRY(widget), "error");
+        return;
+    }
+
+    widget = find_child(GTK_WIDGET(plotter_window), "id@gtk_xmax");
+    g_snprintf(str, sizeof(str), "%s", gtk_entry_get_text(GTK_ENTRY(widget)));
+    to_locale_decimal_point(str);
+    x_max = strtod(str, &endptr);
+    if (endptr == str || *endptr != '\0') {
+        gtk_entry_set_text(GTK_ENTRY(widget), "error");
+        return;
+    }
+
+    widget = find_child(GTK_WIDGET(plotter_window), "id@gtk_ymin");
+    g_snprintf(str, sizeof(str), "%s", gtk_entry_get_text(GTK_ENTRY(widget)));
+    to_locale_decimal_point(str);
+    y_min = strtod(str, &endptr);
+    if (endptr == str || *endptr != '\0') {
+        gtk_entry_set_text(GTK_ENTRY(widget), "error");
+        return;
+    }
+
+    widget = find_child(GTK_WIDGET(plotter_window), "id@gtk_ymax");
+    g_snprintf(str, sizeof(str), "%s", gtk_entry_get_text(GTK_ENTRY(widget)));
+    to_locale_decimal_point(str);
+    y_max = strtod(str, &endptr);
+    if (endptr == str || *endptr != '\0') {
+        gtk_entry_set_text(GTK_ENTRY(widget), "error");
+        return;
+    }
+
+    widget = find_child(GTK_WIDGET(plotter_window), "id@gtk_entry");
+    g_snprintf(str, sizeof(str), "%s", gtk_entry_get_text(GTK_ENTRY(widget)));
+
+    que* qu;
+
+    linspace(x, x_min, x_max, count_of_dots);
+
+    if (str_to_polish(str, &qu) == true) {
+        for (int i = 0; i < count_of_dots; ++i) {
+            y[i] = calculate(qu, x[i]);
+        }
+        plotter_set_domain(y_min, y_max);
+        plotter_set_range(x_min, x_max);
+        plotter_set_function(x, y, count_of_dots);
+        gtk_widget_set_sensitive(GTK_WIDGET(plotter_window), FALSE);
+        gtk_widget_hide(GTK_WIDGET(plotter_window));
+        plotter_draw();
+        plotter_signal_connect_on_close(on_plotter_window_close,
+                                        (gpointer)plotter_window);
+    } else {
+        gtk_entry_buffer_set_text(gtk_entry_get_buffer(GTK_ENTRY(widget)),
+                                  "ERROR", 6);
+    }
+    queue_free(qu);
 }

@@ -41,7 +41,6 @@
                 <property name="can_focus">True</property>
                 <property name="focus_on_click">False</property>
                 <property name="receives_default">True</property>
-                <signal name="clicked" handler="onCredit" object="gtk_window" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">True</property>

@@ -210,7 +210,7 @@ END_TEST
 START_TEST(pars_num_test01) {
     char *str = "-333.4";
     int len;
-    long double ret_num;
+    double ret_num;
     char ret_chr;
     parse_num(str, &len, &ret_num, &ret_chr);
     // printf("len %.3lf = %d\n", ret_num, len);
